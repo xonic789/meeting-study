@@ -4,6 +4,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import study.devmeetingstudy.domain.QAddress;
+import study.devmeetingstudy.domain.enums.DeletionStatus;
 import study.devmeetingstudy.domain.study.StudyMember;
 
 import javax.persistence.EntityManager;
@@ -39,7 +40,8 @@ public class StudyMemberRepositoryImpl implements StudyMemberRepositoryCustom{
                 .leftJoin(study.subject, subject).fetchJoin()
                 .leftJoin(offline.address, address).fetchJoin()
                 .where(
-                        studyMember.member.id.eq(memberId)
+                        studyMember.member.id.eq(memberId),
+                        study.deletionStatus.eq(DeletionStatus.NOT_DELETED)
                 )
                 .fetch();
     }
