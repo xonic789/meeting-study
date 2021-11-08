@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { checkToken, userStatus, logout } from '../ToolKit/user';
+import { checkToken, userStatus, logout, infoMy } from '../ToolKit/user';
 
 export default function auth(SpecificComponent: React.FC, option: boolean | null) {
   function AuthenticationCheck() {
@@ -27,6 +27,9 @@ export default function auth(SpecificComponent: React.FC, option: boolean | null
             }
           }
         });
+        if (user.email === '') {
+          dispatch(infoMy());
+        }
       };
       check();
     }, [user]);
