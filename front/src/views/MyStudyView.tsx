@@ -75,7 +75,7 @@ function MyStudyView() {
   const Dispatch = useDispatch();
 
   const history = useHistory();
-  const [study, setStudy] = useState([]);
+  const [study, setStudy] = useState<any[]>([]);
   const [inputs, setInputs] = useState({
     email: '',
     nickname: '',
@@ -162,20 +162,20 @@ function MyStudyView() {
                 // console.log(typeof pathname);
                 // console.log(pathnameSlice);
                 return (
-                  <>
-                    <Link to={url}>
-                      <Item
-                        onClick={(e) => onClick(e.currentTarget, index)}
-                        key={index}
-                        className={index === parseInt(obj[pathnameSlice]) ? 'selected' : ''}
-                      >
+                  <React.Fragment key={index}>
+                    <Item
+                      onClick={(e) => onClick(e.currentTarget, index)}
+                      key={index}
+                      className={index === parseInt(obj[pathnameSlice]) ? 'selected' : ''}
+                    >
+                      <Link to={url}>
                         <Icon style={{ display: 'flex', flexDirection: 'column' }}>
                           {image}
                           <span>{title}</span>
                         </Icon>
-                      </Item>
-                    </Link>
-                  </>
+                      </Link>
+                    </Item>
+                  </React.Fragment>
                 );
               })}
             </Items>
