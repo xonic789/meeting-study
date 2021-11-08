@@ -68,7 +68,7 @@ public class StudyFacadeServiceImpl implements StudyFacadeService {
     public StudyDto findStudyByStudyId(Long studyId) {
         Study study = studyService.findStudyFetchJoinById(studyId);
         return StudyDto.of(study,
-                studyMemberService.findStudyMemberByStudyIdAndStudyAuth(study.getId(), StudyAuth.LEADER),
+                studyMemberService.findStudyMembersByStudyId(studyId),
                 studyFileService.findStudyFileByStudyId(study.getId()));
     }
 
