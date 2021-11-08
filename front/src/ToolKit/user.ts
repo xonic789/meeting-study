@@ -7,6 +7,7 @@ import {
   reissueToken,
   sendMessages,
   deleteMessages,
+  myInfo,
 } from '../API/index';
 import { RegisterType, LoginType, Token, TokenCheck, USER_TYPE } from './userType';
 import { ResRegister, ResLogin, PayloadSuccessType, PayloadFailType, ResSendMessage } from './axiosType';
@@ -42,6 +43,27 @@ export const login = createAsyncThunk('LOGIN', async (user: LoginType, { rejectW
     const { data }: PayloadSuccessType<ResLogin> = await login_user(user);
 
     saveLocalStorage(data.data);
+
+    return {
+      type: USER_TYPE.USER_LOGIN,
+      payload: data,
+    };
+  } catch (err: any) {
+    const error: PayloadFailType = err.response.data;
+
+    const obj = {
+      ...error,
+      type: USER_TYPE.USER_LOGIN,
+    };
+    return rejectWithValue(obj);
+  }
+});
+
+export const infoMy = createAsyncThunk('MY_INFO', async (arg, { rejectWithValue }) => {
+  try {
+    const {
+      data: { data },
+    } = await myInfo();
 
     return {
       type: USER_TYPE.USER_LOGIN,
@@ -136,14 +158,26 @@ interface AuthType {
 }
 
 export interface InitialState {
-  user: {};
+  user: {
+    type: USER_TYPE.USER_REGISTER | USER_TYPE.USER_LOGIN | USER_TYPE.USER_LOGOUT;
+    email: string;
+    grade: number;
+    id: number;
+    nickname: string;
+  };
   status: string;
   auth: AuthType;
   message: any;
 }
 
 const State: InitialState = {
-  user: {},
+  user: {
+    type: USER_TYPE.USER_LOGOUT,
+    email: '',
+    grade: 0,
+    id: 0,
+    nickname: '',
+  },
   status: '',
   auth: {
     type: '',
@@ -178,36 +212,46 @@ const user = createSlice({
       console.log('로그아웃');
 
       localStorage.clear();
-      state.user = { type: USER_TYPE.USER_LOGOUT, payload: '로그아웃되었습니다.' };
+      state.user = { ...State.user, type: USER_TYPE.USER_LOGOUT };
     },
   },
   extraReducers: (builder) => {
     // 회원가입
     builder.addCase(register.pending, (state) => {
       state.status = 'loading';
-      state.user = {};
     });
     builder.addCase(register.fulfilled, (state, { type, payload }) => {
       state.status = 'success';
-      state.user = { type, payload };
     });
     builder.addCase(register.rejected, (state, { type, payload }) => {
       state.status = 'failed';
-      state.user = { type, payload };
     });
 
     // 로그인
     builder.addCase(login.pending, (state) => {
       state.status = 'loading';
-      state.user = {};
     });
     builder.addCase(login.fulfilled, (state, { type, payload }) => {
       state.status = 'success';
-      state.user = { type, payload };
     });
     builder.addCase(login.rejected, (state, { type, payload }) => {
       state.status = 'failed';
-      state.user = { type, payload };
+    });
+
+    // 내 정보
+    builder.addCase(infoMy.pending, (state) => {
+      state.status = 'loading';
+    });
+    builder.addCase(infoMy.fulfilled, (state, { type, payload }) => {
+      state.status = 'success';
+      // @ts-ignore
+      const res = payload.payload;
+
+      // @ts-ignore
+      state.user = { type: USER_TYPE.USER_LOGIN, ...res };
+    });
+    builder.addCase(infoMy.rejected, (state, { type, payload }) => {
+      state.status = 'failed';
     });
 
     // 토큰 체크
