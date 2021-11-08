@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
+import { getMyStudy } from '../API/index';
 import StudyHeader from '../components/StudyHeader';
 import StudyColumnList from '../components/StudyColumnList';
 import { Main, Section, InputWrap, Input, InputTitle, Button, Icon } from '../elements';
@@ -64,21 +65,6 @@ export const items = [
   },
 ];
 
-const study = [
-  {
-    title: 'java spring',
-    type: '오프라인',
-    maxUser: 3,
-    lang: ['java'],
-  },
-  {
-    title: 'java 하실 분',
-    type: '온라인',
-    maxUser: 5,
-    lang: ['java'],
-  },
-];
-
 interface PayloadProps {
   payload: {
     payload: {
@@ -90,6 +76,7 @@ function MyStudyView() {
   const Dispatch = useDispatch();
 
   const history = useHistory();
+  const [study, setStudy] = useState<any[]>([]);
   const [inputs, setInputs] = useState({
     email: '',
     nickname: '',
@@ -142,6 +129,21 @@ function MyStudyView() {
     Dispatch(listMessage());
   }, []);
 
+  useEffect(() => {
+    const callMyStudy = async () => {
+      try {
+        const {
+          data: { data },
+        } = await getMyStudy();
+
+        setStudy(data);
+      } catch (err) {
+        console.log('스터디 불러오기 실패');
+      }
+    };
+    callMyStudy();
+  }, []);
+
   return (
     <>
       <StudyHeader>MY 스터디</StudyHeader>
@@ -161,20 +163,20 @@ function MyStudyView() {
                 // console.log(typeof pathname);
                 // console.log(pathnameSlice);
                 return (
-                  <>
-                    <Link to={url}>
-                      <Item
-                        onClick={(e) => onClick(e.currentTarget, index)}
-                        key={index}
-                        className={index === parseInt(obj[pathnameSlice]) ? 'selected' : ''}
-                      >
+                  <React.Fragment key={index}>
+                    <Item
+                      onClick={(e) => onClick(e.currentTarget, index)}
+                      key={index}
+                      className={index === parseInt(obj[pathnameSlice]) ? 'selected' : ''}
+                    >
+                      <Link to={url}>
                         <Icon style={{ display: 'flex', flexDirection: 'column' }}>
                           {image}
                           <span>{title}</span>
                         </Icon>
-                      </Item>
-                    </Link>
-                  </>
+                      </Link>
+                    </Item>
+                  </React.Fragment>
                 );
               })}
             </Items>

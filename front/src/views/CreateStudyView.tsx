@@ -55,11 +55,7 @@ function CreateStudyView() {
     content: '',
     startDate: moment().format('YYYY-MM-DD'),
     endDate: '',
-    file: {
-      id: 0,
-      name: '',
-      path: '',
-    },
+    file: null,
     studyFileId: 0,
     sido: '',
     gun: '',
@@ -198,11 +194,7 @@ function CreateStudyView() {
         content: query.content,
         startDate: query.startDate,
         endDate: query.endDate,
-        file: {
-          id: parseInt(queryString.parse(query.files).id as string),
-          name: queryString.parse(query.files).name as string,
-          path: queryString.parse(query.files).path as string,
-        },
+        file: null,
         studyFileId: parseInt(queryString.parse(query.files).id as string),
         // sido,
         // gun,
@@ -261,8 +253,9 @@ function CreateStudyView() {
         formData.append('endDate', endDate);
         formData.append('studyFileId', studyFileId.toString());
 
-        // @ts-ignore
-        formData.append('file', file);
+        if (file !== null) {
+          formData.append('file', file);
+        }
 
         console.log('file', file);
 
