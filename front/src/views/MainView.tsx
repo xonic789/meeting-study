@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { getSubjects } from '../API/index';
 import { Main, Section, Icon } from '../elements';
 import SearchIcon from '@material-ui/icons/Search';
 import StudyHeader from '../components/StudyHeaderRemove';
@@ -118,6 +119,7 @@ export const initalStudy = {
 };
 
 function OpenStudyView() {
+  const [subjects, setSubjects] = useState([]);
   const [modal, setModal] = useState({
     open: false,
     study: { ...initalStudy } as ItemsType,
@@ -129,17 +131,33 @@ function OpenStudyView() {
     lastId: null,
     studyType: 'FREE',
     sorted: 'DESC',
-    subjectId: null,
+    subjectId: 0,
     title: null,
     offset: 4,
   });
 
   const onChange = (e: React.ChangeEvent<HTMLSelectElement> | React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setInputs({
-      ...inputs,
-      [name]: name === 'offset' ? parseInt(value) : value,
-    });
+
+    if (name === 'subjectId') {
+      const options = Array.from(e.target.children);
+
+      const idx = options.filter((item: Element) => {
+        if (item.innerHTML === value) {
+          return item;
+        }
+      });
+
+      setInputs({
+        ...inputs,
+        subjectId: value === 'ALL' ? parseInt('0') : parseInt(idx[0].id),
+      });
+    } else {
+      setInputs({
+        ...inputs,
+        [name]: name === 'offset' ? parseInt(value) : value,
+      });
+    }
   };
 
   const modalStateChange = (open: boolean, study: ItemsType, del: boolean) => {
@@ -149,6 +167,16 @@ function OpenStudyView() {
       del,
     });
   };
+
+  useEffect(() => {
+    const getSubject = async () => {
+      const {
+        data: { data },
+      } = await getSubjects();
+      setSubjects(data);
+    };
+    getSubject();
+  }, []);
 
   useEffect(() => {
     if (modal.open) {
@@ -182,20 +210,6 @@ function OpenStudyView() {
             }}
           >
             <div>
-              <span
-                style={{
-                  display: 'inline-block',
-                  lineHeight: '40px',
-                  marginRight: '30px',
-                  marginLeft: '35px',
-                  padding: '0px 10px',
-                  borderRadius: '5px',
-                  backgroundColor: '#51aafe',
-                }}
-              >
-                전체
-              </span>
-
               <Select id="type-select" name="dtype" onChange={onChange}>
                 <option value="ONLINE">온라인</option>
                 {/* 오프라인은 배포 이후 지원 */}
@@ -209,6 +223,16 @@ function OpenStudyView() {
                 <option value={4}>4개</option>
                 <option value={8}>8개</option>
                 <option value={16}>16개</option>
+              </Select>
+              <Select id="subject-select" name="subjectId" onChange={onChange}>
+                <option id="0" value="ALL">
+                  모든 언어
+                </option>
+                {subjects.map((item: { id: number; name: string }) => (
+                  <option key={item.id} id={item.id.toString()} value={item.name}>
+                    {item.name}
+                  </option>
+                ))}
               </Select>
               {inputs.dtype === 'OFFLINE' && (
                 <>
