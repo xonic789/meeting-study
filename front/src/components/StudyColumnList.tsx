@@ -295,6 +295,23 @@ function StudyColumnList({ items, index }: PropsType) {
 
   const foundLeader = (members: MemberType[]) => {
     const leader: MemberType = members.filter((member: MemberType) => member.studyAuth === 'LEADER')[0];
+
+    const MockleaderObj: MemberType = {
+      id: 0,
+      member: {
+        email: '',
+        grade: 0,
+        id: 0,
+        nickname: '',
+      },
+      studyAuth: '',
+      studyMemberStatus: '',
+    };
+
+    if (leader === undefined) {
+      return MockleaderObj;
+    }
+
     return leader;
   };
 
@@ -352,6 +369,7 @@ function StudyColumnList({ items, index }: PropsType) {
                       </div>
                     </>
                   )}
+
                   <div className="member-list">
                     <StudyMemberList>
                       {item.studyMembers.map((member) => {
