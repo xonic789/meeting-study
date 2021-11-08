@@ -59,7 +59,15 @@ const StudyItem = styled.li`
       transition: 0.2s linear;
       transform: rotate(90deg);
     }
+    & > ul {
+      transition: 0.2s linear;
+      display: block;
+    }
   }
+`;
+
+const StudyMemberList = styled.ul`
+  display: none;
 `;
 
 const Contents = styled.div`
@@ -155,6 +163,11 @@ function StudyColumnList({ items, index }: PropsType) {
                     <span>언어 : {item.subject.name}</span>
                   </div>
                 </div>
+                <StudyMemberList>
+                  {item.studyMembers.map((member) => {
+                    return <li key={member.member.id}>{member.member.nickname}</li>;
+                  })}
+                </StudyMemberList>
               </StudyItem>
             );
           })}
