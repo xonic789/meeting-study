@@ -171,6 +171,13 @@ const getStudty = (filter: FilterType) => {
   });
 };
 
+const applicationStudy = (studyId: number) => {
+  return Send({
+    method: Method.POST,
+    url: `/studies/${studyId}/study-members`,
+  });
+};
+
 const getMyStudy = () => {
   return Send({
     method: Method.GET,
@@ -222,6 +229,7 @@ export {
   addSubject,
   saveStudty,
   getStudty,
+  applicationStudy,
   getMyStudy,
   delStudy,
   studyInfo,

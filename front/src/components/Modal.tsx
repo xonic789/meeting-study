@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { delStudy, studyInfo as studyInfoFunc } from '../API/index';
+import { delStudy, studyInfo as studyInfoFunc, applicationStudy } from '../API/index';
 import { Icon } from '../elements/index';
 import { ItemsType } from './Items';
 import { initalStudy } from '../views/MainView';
@@ -175,6 +175,26 @@ function Modal({ study, modalStateChange }: PropsType) {
     }
   };
 
+  const joinStudy = async () => {
+    try {
+      const {
+        data: { data },
+      } = await applicationStudy(study.id);
+
+      console.log('data', data);
+
+      alert('스터디 신청 성공!');
+    } catch (err: any) {
+      const error = err.response.data;
+
+      if (error) {
+        alert(error.message);
+      } else {
+        alert('스터디 신청 중 에러 발생');
+      }
+    }
+  };
+
   const deleteStudy = async () => {
     try {
       console.log('l', study);
@@ -209,6 +229,9 @@ function Modal({ study, modalStateChange }: PropsType) {
           </div>
           <div className="leader">
             <span>{leader.member.nickname}</span>
+            <button type="button" onClick={joinStudy}>
+              신청
+            </button>
             <button type="button" onClick={deleteStudy}>
               삭제
             </button>
