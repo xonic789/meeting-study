@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -23,12 +23,13 @@ const Logo = styled.div`
   z-index: 1;
   font-size: 2em;
 
-  @media screen and (max-width: 740px) {
+  /* @media screen and (max-width: 740px) {
     & {
       display: none;
     }
-  }
+  } */
 `;
+
 const CenterList = styled.div`
   display: flex;
   width: 740px;
@@ -39,8 +40,8 @@ const CenterList = styled.div`
 const MenuList = styled.ul`
   display: flex;
   align-items: stretch;
-  flex-wrap: wrap;
   justify-content: center;
+  flex-wrap: wrap;
   flex-direction: row;
   margin: 1em auto;
   width: calc(100% - 2px);
@@ -64,11 +65,11 @@ const MenuItem = styled.li`
     background-color: #98bcda;
     opacity: 0.5;
   }
-  @media screen and (max-width: 740px) {
+  /* @media screen and (max-width: 740px) {
     & {
       display: none;
     }
-  }
+  } */
 `;
 
 function StudyHeader() {
