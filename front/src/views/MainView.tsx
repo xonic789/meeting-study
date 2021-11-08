@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Main, Section, Icon } from '../elements';
-import SearchIcon from '@material-ui/icons/Search';
 import StudyHeader from '../components/StudyHeaderRemove';
 import StudyFooter from '../components/StudyFooter';
 import Items from '../components/Items';
@@ -232,9 +231,6 @@ function OpenStudyView() {
             </div>
             <div>
               <input name="title" onChange={onChange} placeholder="검색" />
-              <Icon>
-                <SearchIcon style={{ fontSize: '45px', marginRight: '25px' }} />
-              </Icon>
             </div>
           </div>
           <ItemList>
