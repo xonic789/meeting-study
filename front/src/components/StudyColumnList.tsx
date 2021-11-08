@@ -59,7 +59,7 @@ function StudyColumnList({ items, index }: PropsType) {
     contentMax.classList.toggle('open');
   };
   const onDelete = (e: any, item: any) => {
-    console.debug("kk", item);
+    console.debug('kk', item);
     Dispatch(deleteMessage(item.id));
   };
   useEffect(() => {
@@ -118,6 +118,7 @@ function StudyColumnList({ items, index }: PropsType) {
             const date = moment(item.createdDate).format('YYYY-MM-DD HH:mm:ss');
             const contents = item.content.substring(0, 40);
             const contentsMax = item.content;
+            const nickName = item.sender.nickname;
             return (
               <>
                 <li
@@ -131,7 +132,7 @@ function StudyColumnList({ items, index }: PropsType) {
                       <img src={person} alt="유저" />
                     </div>
                     <div>
-                      <span>{date}</span>
+                      <span>{nickName}</span> <span>{date}</span>
                       <button onClick={(e) => onDelete(e, item)}>Del</button>
                       <Contents ref={contentSliceRef} className="open">
                         {contents}
