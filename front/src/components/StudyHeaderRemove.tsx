@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { InitialState } from '../ToolKit/user';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import logo from '../asset/image/logo_out_book.png';
@@ -30,17 +29,20 @@ const Logo = styled.div`
     }
   }
 `;
+const CenterList = styled.div`
+  width: 740px;
+  margin: auto;
+`;
 
 const MenuList = styled.ul`
   display: flex;
-  justify-content: center;
   align-items: stretch;
   flex-wrap: wrap;
   flex-direction: row;
   margin: 1em auto;
   width: calc(100% - 2px);
   align-items: center;
-  margin: 0px;
+  /* margin: 0px; */
 `;
 
 const RightMenu = styled.li`
@@ -80,29 +82,31 @@ function StudyHeader() {
 
   return (
     <HeaderWrap>
-      <MenuList>
-        <Logo>
-          <p>
-            <Link to="/">
-              <img src={logo} alt="Logo" style={{ width: '100px' }} />
-            </Link>
-          </p>
-        </Logo>
-        <RightMenu />
-        {isAuth.success ? (
-          <MenuItem onClick={onLogout}>로그아웃</MenuItem>
-        ) : (
-          <>
-            <Link to="/login">
-              <MenuItem>로그인</MenuItem>
-            </Link>
+      <CenterList>
+        <MenuList>
+          <Logo>
+            <p>
+              <Link to="/">
+                <img src={logo} alt="Logo" style={{ width: '100px' }} />
+              </Link>
+            </p>
+          </Logo>
+          <RightMenu />
+          {isAuth.success ? (
+            <MenuItem onClick={onLogout}>로그아웃</MenuItem>
+          ) : (
+            <>
+              <Link to="/login">
+                <MenuItem>로그인</MenuItem>
+              </Link>
 
-            <Link to="/register">
-              <MenuItem>회원가입</MenuItem>
-            </Link>
-          </>
-        )}
-      </MenuList>
+              <Link to="/register">
+                <MenuItem>회원가입</MenuItem>
+              </Link>
+            </>
+          )}
+        </MenuList>
+      </CenterList>
     </HeaderWrap>
   );
 }

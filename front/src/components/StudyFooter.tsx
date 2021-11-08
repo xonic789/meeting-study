@@ -19,32 +19,38 @@ const FooterBox = styled.div`
   align-items: center;
   opacity: 0.9;
 `;
+const CenterList = styled.div`
+  width: 740px;
+  display: flex;
+  justify-content: space-between;
+`;
 
-// eslint-disable-next-line no-empty-pattern
 function StudyFooter({}: StudyFooterProps) {
   return (
     <>
       <FooterBox>
-        <Icon>
-          <Link to="/">
-            <HomeIcon style={{ fontSize: 70 }} />
-          </Link>
-        </Icon>
-        <Icon>
-          <Link to="/my/study">
-            <BookmarkIcon style={{ fontSize: 70 }} />
-          </Link>
-        </Icon>
-        <Icon>
-          <Link to="/study/create">
-            <BookmarksIcon style={{ fontSize: 70 }} />
-          </Link>
-        </Icon>
-        <Icon>
-          <Link to="/my/info">
-            <PersonOutlineIcon style={{ fontSize: 70 }} />
-          </Link>
-        </Icon>
+        <CenterList>
+          <Icon>
+            <Link to="/">
+              <HomeIcon style={{ fontSize: 70 }} />
+            </Link>
+          </Icon>
+          <Icon>
+            <Link to="/my/study">
+              <BookmarkIcon style={{ fontSize: 70 }} />
+            </Link>
+          </Icon>
+          <Icon>
+            <Link to="/study/create">
+              <BookmarksIcon style={{ fontSize: 70 }} />
+            </Link>
+          </Icon>
+          <Icon>
+            <Link to="/my/info">
+              <PersonOutlineIcon style={{ fontSize: 70 }} />
+            </Link>
+          </Icon>
+        </CenterList>
       </FooterBox>
     </>
   );
