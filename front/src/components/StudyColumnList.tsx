@@ -8,16 +8,59 @@ import moment from 'moment';
 import { deleteMessage, listMessage, message } from '../ToolKit/messages';
 
 interface Study {
-  title: string;
-  type: string;
-  maxUser: number;
-  lang: string[];
+  createdDate: string;
+  dtype: string;
+  endDate: string;
+  files: {
+    id: number;
+    name: string;
+    path: string;
+  }[];
   id: number;
+  lastUpdateDate: string;
+  maxMember: number;
+  offline: boolean;
+  online: {
+    id: number;
+    link: string;
+    onlineType: string;
+  };
+  startDate: string;
+  studyMembers: {
+    id: number;
+    member: {
+      email: string;
+      grade: number;
+      id: number;
+      nickname: string;
+    };
+    studyAuth: string;
+    studyMemberStatus: string;
+  }[];
+  studyType: string;
+  subject: {
+    id: number;
+    name: string;
+  };
+  title: string;
 }
 interface PropsType {
   items?: any;
   index: number;
 }
+
+const StudyItem = styled.li`
+  & > .study-top > span {
+    transition: 0.2s linear;
+    transform: rotate(0deg);
+  }
+  &.open {
+    & > .study-top > span {
+      transition: 0.2s linear;
+      transform: rotate(90deg);
+    }
+  }
+`;
 
 const Contents = styled.div`
   max-width: 390px;
@@ -59,13 +102,17 @@ function StudyColumnList({ items, index }: PropsType) {
     contentMax.classList.toggle('open');
   };
   const onDelete = (e: any, item: any) => {
-    console.debug("kk", item);
+    console.debug('kk', item);
     Dispatch(deleteMessage(item.id));
   };
   useEffect(() => {
     setListMessage(messageData?.payload?.payload?.data);
   }, [onDelete]);
   console.log(listMessage, 'listMessage12312');
+
+  const clickStudy = (e: React.MouseEvent<HTMLLIElement>) => {
+    e.currentTarget.classList.toggle('open');
+  };
 
   // JSX
   return (
@@ -76,40 +123,39 @@ function StudyColumnList({ items, index }: PropsType) {
         {index === 1 &&
           items.map((item: Study, idx: number) => {
             return (
-              <li key={idx} style={{ margin: '20px 0px', cursor: 'pointer' }}>
-                <div className="study-top">
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <h2>
-                      {item.title}{' '}
-                      <span
-                        style={{
-                          fontSize: '18px',
-                          fontWeight: 'lighter',
-                        }}
-                      >
-                        - {item.type}
-                      </span>
-                    </h2>
-                    <Icon>
-                      <ArrowForwardIosIcon />
-                    </Icon>
+              <StudyItem key={idx} style={{ margin: '20px 0px', cursor: 'pointer' }} onClick={clickStudy}>
+                <div
+                  className="study-top"
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  <h2>
+                    {item.title}{' '}
+                    <span
+                      style={{
+                        fontSize: '18px',
+                        fontWeight: 'lighter',
+                      }}
+                    >
+                      - {item.dtype}
+                    </span>
+                  </h2>
+                  <Icon>
+                    <ArrowForwardIosIcon />
+                  </Icon>
+                </div>
+                <div className="item-bottom" style={{ marginTop: '10px' }}>
+                  <div>
+                    <span>최대 참여 인원 : {item.maxMember}</span>
                   </div>
-                  <div className="item-bottom" style={{ marginTop: '10px' }}>
-                    <div>
-                      <span>최대 참여 인원 : {item.maxUser}</span>
-                    </div>
-                    <div>
-                      <span>언어 : {item.lang}</span>
-                    </div>
+                  <div>
+                    <span>언어 : {item.subject.name}</span>
                   </div>
                 </div>
-              </li>
+              </StudyItem>
             );
           })}
         {index === 2 &&

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
+import { getMyStudy } from '../API/index';
 import StudyHeader from '../components/StudyHeader';
 import StudyColumnList from '../components/StudyColumnList';
 import { Main, Section, InputWrap, Input, InputTitle, Button, Icon } from '../elements';
@@ -63,21 +64,6 @@ export const items = [
   },
 ];
 
-const study = [
-  {
-    title: 'java spring',
-    type: '오프라인',
-    maxUser: 3,
-    lang: ['java'],
-  },
-  {
-    title: 'java 하실 분',
-    type: '온라인',
-    maxUser: 5,
-    lang: ['java'],
-  },
-];
-
 interface PayloadProps {
   payload: {
     payload: {
@@ -89,6 +75,7 @@ function MyStudyView() {
   const Dispatch = useDispatch();
 
   const history = useHistory();
+  const [study, setStudy] = useState([]);
   const [inputs, setInputs] = useState({
     email: '',
     nickname: '',
@@ -139,6 +126,21 @@ function MyStudyView() {
     const pathnameSlice = pathname.slice(4);
     setItem(parseInt(obj[pathnameSlice]));
     Dispatch(listMessage());
+  }, []);
+
+  useEffect(() => {
+    const callMyStudy = async () => {
+      try {
+        const {
+          data: { data },
+        } = await getMyStudy();
+
+        setStudy(data);
+      } catch (err) {
+        console.log('스터디 불러오기 실패');
+      }
+    };
+    callMyStudy();
   }, []);
 
   return (

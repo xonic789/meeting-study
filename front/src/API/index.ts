@@ -171,6 +171,13 @@ const getStudty = (filter: FilterType) => {
   });
 };
 
+const getMyStudy = () => {
+  return Send({
+    method: Method.GET,
+    url: '/studies/my',
+  });
+};
+
 const delStudy = (id: number, nickname: string, studyId: number) => {
   return Send({
     method: Method.DELETE,
@@ -215,6 +222,7 @@ export {
   addSubject,
   saveStudty,
   getStudty,
+  getMyStudy,
   delStudy,
   studyInfo,
   modifyStudy,
