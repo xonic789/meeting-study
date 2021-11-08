@@ -227,7 +227,7 @@ const makeQueryParm = (obj: object) => {
     // Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{}'.
     // No index signature with a parameter of type 'string' was found on type '{}'.ts(7053)
     // @ts-ignore
-    if (obj[prop] === null) {
+    if (obj[prop] === null || obj[prop] === 0) {
       continue;
     }
     // @ts-ignore
