@@ -7,7 +7,7 @@ export const Section = styled.section`
   justify-content: center;
   align-items: center;
   @media screen and (max-width: 740px) {
-    overflow-y: scroll;
-    margin-bottom: 100px;
+    /* overflow-y: scroll; */
+    /* margin-bottom: 100px; */
   }
 `;

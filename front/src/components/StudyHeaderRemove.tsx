@@ -30,14 +30,17 @@ const Logo = styled.div`
   }
 `;
 const CenterList = styled.div`
+  display: flex;
   width: 740px;
   margin: auto;
+  align-items: center;
 `;
 
 const MenuList = styled.ul`
   display: flex;
   align-items: stretch;
   flex-wrap: wrap;
+  justify-content: center;
   flex-direction: row;
   margin: 1em auto;
   width: calc(100% - 2px);
@@ -82,8 +85,8 @@ function StudyHeader() {
 
   return (
     <HeaderWrap>
-      <CenterList>
-        <MenuList>
+      <MenuList>
+        <CenterList>
           <Logo>
             <p>
               <Link to="/">
@@ -105,8 +108,8 @@ function StudyHeader() {
               </Link>
             </>
           )}
-        </MenuList>
-      </CenterList>
+        </CenterList>
+      </MenuList>
     </HeaderWrap>
   );
 }
