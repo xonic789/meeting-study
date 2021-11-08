@@ -10,6 +10,7 @@ import person from '../asset/image/person.png';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { listMessage, message } from '../ToolKit/messages';
+import StudyFooter from '../components/StudyFooter';
 
 const SelectItem = styled.div`
   width: 500px;
@@ -186,6 +187,7 @@ function MyStudyView() {
           </div>
         </Section>
       </Main>
+      <StudyFooter />
     </>
   );
 }
