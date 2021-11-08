@@ -96,7 +96,12 @@ function StudyHeader() {
           </Logo>
           <RightMenu />
           {isAuth.success ? (
-            <MenuItem onClick={onLogout}>로그아웃</MenuItem>
+            <>
+              <Link to="/my/message/send">
+                <MenuItem>메시지</MenuItem>
+              </Link>
+              <MenuItem onClick={onLogout}>로그아웃</MenuItem>
+            </>
           ) : (
             <>
               <Link to="/login">
