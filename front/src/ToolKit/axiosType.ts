@@ -90,3 +90,35 @@ export interface ResSendMessage {
   message: string;
   status: number;
 }
+export interface ResSendMessageButton {
+  meta: {
+    arg: {
+      content: string;
+      email: string;
+    };
+    requestId: string;
+    requestStatus: string;
+  };
+  data: {
+    content: string;
+    createdDate: Date;
+    delflg: string;
+    id: number;
+    lastUpdateDate: Date;
+    member: {
+      email: string;
+      grade: number;
+      id: number;
+      nickname: string;
+    };
+    sender: {
+      email: string;
+      grade: number;
+      id: number;
+      nickname: string;
+    };
+    status?: string;
+  };
+  message: string;
+  status: number;
+}
