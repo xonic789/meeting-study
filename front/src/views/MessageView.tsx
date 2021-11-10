@@ -44,15 +44,19 @@ function MessageView({}: MessageViewProps) {
       content,
     };
     //ResSendMessageButton 타입 넣는거 도와주세요 help
-    const dispatch: any = await Dispatch(sendMessage(obj));
     try {
-      const statusCode = dispatch.payload.payload.status;
-      if (statusCode === 201) {
-        history.goBack();
-      }
-    } catch {
-      const notUser = dispatch.payload.message;
-      alert(notUser);
+      await Dispatch(sendMessage(obj));
+      // const statusCode = dispatch.payload.payload.status;
+      // if (statusCode === 201) {
+      // }
+      // history.goBack();
+      
+    } catch (err: any) {
+      const error = err.response.data;
+
+      alert(`${error.message}`);
+      // const notUser = dispatch.payload.message;
+      // alert(notUser);
     }
   };
   return (

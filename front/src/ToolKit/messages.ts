@@ -56,6 +56,7 @@ export const readMessage = createAsyncThunk('readMessage', async (id: number, { 
     return {
       type: MESSAGE_TYPE.MESSAGE_READ,
       payload: data,
+      // id,
     };
   } catch (err: any) {
     const error: PayloadFailType = err.response.data;
@@ -101,6 +102,7 @@ export interface InitialState {
   status: string;
   auth: AuthType;
   message: any;
+  messageRead: any;
 }
 
 const State: InitialState = {
@@ -127,6 +129,19 @@ const State: InitialState = {
       },
     },
   },
+  messageRead: {
+    type: '',
+    payload: {
+      type: '',
+      message: '',
+      number: 0,
+      payload: {
+        message: '',
+        status: 0,
+        data: {},
+      },
+    },
+  }
 };
 const messages = createSlice({
   name: 'message',
@@ -155,6 +170,7 @@ const messages = createSlice({
     // 메세지 리스트 성공
     builder.addCase(listMessage.fulfilled, (state, { type, payload }) => {
       state.status = 'success';
+      // array
       state.message = { type, payload };
       console.log(payload);
     });
@@ -170,8 +186,11 @@ const messages = createSlice({
     // 메세지 읽음 성공
     builder.addCase(readMessage.fulfilled, (state, { type, payload }) => {
       state.status = 'success';
-      state.message = { type, payload };
-      console.log(payload);
+      state.messageRead = {
+        type,
+        payload
+      };
+      console.log('메세지 읽음', payload);
     });
     // 메세지 읽음 실패
     builder.addCase(readMessage.rejected, (state, { type, payload }) => {
