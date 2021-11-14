@@ -113,9 +113,8 @@ public class Study extends BaseTimeEntity {
         return foundStudy;
     }
 
-    public Study changeDeletionStatus(DeletionStatus deletionStatus) {
+    public void changeDeletionStatus(DeletionStatus deletionStatus) {
         this.deletionStatus = deletionStatus;
-        return this;
     }
 
     public void removeOnline() {

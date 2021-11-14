@@ -520,7 +520,7 @@ class StudyControllerUnitTest {
         Subject subject = getSubject(1L, "JAVA");
         Study study = getStudy(1L, "자바 스터디원 모집합니다", "얼릉 오세요 얼마 남지 않았습니다.", subject);
         StudyMember studyMember = getStudyMember(1L, study);
-        Study deleteStudy = study.changeDeletionStatus(DeletionStatus.DELETED);
+        study.changeDeletionStatus(DeletionStatus.DELETED);
 
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
         doNothing().when(studyFacadeService).deleteStudy(anyLong(), any(MemberResolverDto.class));
