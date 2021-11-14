@@ -224,49 +224,6 @@ function StudyColumnList({ items, index }: PropsType) {
     await listMember(studyId);
   };
 
-  const checkNull = (obj: object) => {
-    if (obj === null) {
-      return { null: null };
-    }
-    return obj;
-  };
-
-  const makeObjectQueryString = (obj: any | null) => {
-    let url = '';
-
-    const checkObj = checkNull(obj as object);
-
-    for (let prop in checkObj) {
-      // @ts-ignore
-      url += `${prop}=${checkObj[prop]}&`;
-    }
-
-    return url;
-  };
-
-  const makeQueryString = (study: Study) => {
-    let url = '/study/modify/type=modify&';
-    for (let prop in study) {
-      if (prop === 'studyMembers') {
-        continue;
-      }
-      // @ts-ignore
-      url = url += `${prop}=${
-        // @ts-ignore
-        typeof study[prop] === 'object'
-          ? // @ts-ignore
-            encodeURIComponent(makeObjectQueryString(prop === 'files' ? study[prop][0] : study[prop]))
-          : // @ts-ignore
-            encodeURIComponent(study[prop])
-      }&`;
-    }
-
-    // 마지막 & 제거
-    url = url.substr(0, url.length - 1);
-
-    return url;
-  };
-
   interface MemberType {
     id: number;
     member: {
@@ -394,7 +351,7 @@ function StudyColumnList({ items, index }: PropsType) {
                   {foundLeader(item.studyMembers).member.id === userInfo.id && (
                     <>
                       <div className="study-info-top">
-                        <Link to={() => makeQueryString(item)} className="modify-study">
+                        <Link to={`/study/modify?studyId=${item.id}`} className="modify-study">
                           수정
                         </Link>
                         <button className="delete-study" onClick={(e) => deleteStudy(e, item)}>
