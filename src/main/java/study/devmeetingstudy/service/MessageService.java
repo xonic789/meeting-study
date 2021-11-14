@@ -39,7 +39,7 @@ public class MessageService {
     }
 
     public Message readMessage(Message message){
-        if (isNotRead(message.getStatus())) return Message.changeReadStatus(MessageReadStatus.READ, message);
+        if (isNotRead(message.getStatus())) return message.changeReadStatus(MessageReadStatus.READ);
         return message;
     }
 
@@ -55,7 +55,7 @@ public class MessageService {
     @Transactional
     public void deleteMessage(Message message) {
         if (isNotDeleted(message.getDeletionStatus())) {
-            Message.changeDeletionStatus(DeletionStatus.DELETED, message);
+            message.changeDeletionStatus(DeletionStatus.DELETED);
             // 영속화 후 변경 감지.
             messageRepository.save(message);
         }
