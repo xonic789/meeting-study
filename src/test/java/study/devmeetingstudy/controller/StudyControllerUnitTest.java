@@ -145,7 +145,7 @@ class StudyControllerUnitTest {
         Study study = Study.create(studySaveReqDto, subject);
         Online online = Online.create(studySaveReqDto, study);
 
-        MockMultipartFile image = new MockMultipartFile("file", "image-1.jpeg", "image/jpeg", "<<jpeg data>>".getBytes(StandardCharsets.UTF_8));
+        studySaveReqDto.setFile(new MockMultipartFile("file", "image-1.jpeg", "image/jpeg", "<<jpeg data>>".getBytes(StandardCharsets.UTF_8)));
 
         //업로드 과정
         Map<String, String> fileInfo = new HashMap<>();
@@ -163,15 +163,12 @@ class StudyControllerUnitTest {
 
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
 
-        doReturn(loginMember).when(memberService).getUserOne(anyLong());
+        doReturn(loginMember).when(memberService).getMemberOne(anyLong());
         doReturn(createdStudyDto).when(studyFacadeService).storeStudy(any(StudySaveReqDto.class), any(Member.class));
 
         //when
         // multipart는 기본적으로 POST 요청이다.
         final ResultActions resultActions = mockMvc.perform(multipart("/api/studies/")
-                        .file(image)
-                        .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "bearer " + tokenDto.getAccessToken())
                         .flashAttr("studySaveReqDto", studySaveReqDto));
 
@@ -229,7 +226,7 @@ class StudyControllerUnitTest {
         Address address = Address.create(addressReqDto);
         Offline offline = Offline.create(address, study);
 
-        MockMultipartFile image = new MockMultipartFile("file", "image-1.jpeg", "image/jpeg", "<<jpeg data>>".getBytes(StandardCharsets.UTF_8));
+        studySaveReqDto.setFile(new MockMultipartFile("file", "image-1.jpeg", "image/jpeg", "<<jpeg data>>".getBytes(StandardCharsets.UTF_8)));
         //업로드 과정
         Map<String, String> fileInfo = new HashMap<>();
         fileInfo.put(Uploader.FILE_NAME, "image-1.jpeg");
@@ -245,15 +242,12 @@ class StudyControllerUnitTest {
                 .build();
 
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
-        doReturn(loginMember).when(memberService).getUserOne(anyLong());
+        doReturn(loginMember).when(memberService).getMemberOne(anyLong());
         doReturn(createdStudyDto).when(studyFacadeService).storeStudy(any(StudySaveReqDto.class), any(Member.class));
 
         //when
         // multipart는 기본적으로 POST 요청이다.
         final ResultActions resultActions = mockMvc.perform(multipart("/api/studies/")
-                .file(image)
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "bearer " + tokenDto.getAccessToken())
                 .flashAttr("studySaveReqDto", studySaveReqDto));
 
@@ -526,7 +520,7 @@ class StudyControllerUnitTest {
         Subject subject = getSubject(1L, "JAVA");
         Study study = getStudy(1L, "자바 스터디원 모집합니다", "얼릉 오세요 얼마 남지 않았습니다.", subject);
         StudyMember studyMember = getStudyMember(1L, study);
-        Study deleteStudy = Study.changeDeletionStatus(study, DeletionStatus.DELETED);
+        Study deleteStudy = study.changeDeletionStatus(DeletionStatus.DELETED);
 
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
         doNothing().when(studyFacadeService).deleteStudy(anyLong(), any(MemberResolverDto.class));
