@@ -149,7 +149,7 @@ class MessageServiceTest {
         Long messageId = 1L;
         Message notDeletedMessage = createMessage(1L, loginMember, member);
         Message deletedMessage = createMessage(1L, loginMember, member);
-        Message.changeDeletionStatus(DeletionStatus.DELETED, deletedMessage);
+        deletedMessage.changeDeletionStatus(DeletionStatus.DELETED);
 
         doReturn(deletedMessage).when(messageRepository).save(any(Message.class));
         //when
