@@ -246,7 +246,7 @@ class StudyMemberControllerUnitTest {
 
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
         doReturn(studyMember).when(studyMemberService).saveStudyMember(any(Member.class), any(Study.class));
-        doReturn(loginMember).when(memberService).getUserOne(anyLong());
+        doReturn(loginMember).when(memberService).getMemberOne(anyLong());
         doReturn(study).when(studyService).findStudyById(anyLong());
 
         //when

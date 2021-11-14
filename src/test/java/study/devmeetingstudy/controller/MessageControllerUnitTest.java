@@ -140,7 +140,7 @@ class MessageControllerUnitTest {
         // sender userOne
         // member memberInfo
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
-        doReturn(loginMember).when(memberService).getUserOne(any(Long.class));
+        doReturn(loginMember).when(memberService).getMemberOne(any(Long.class));
         doReturn(member).when(memberService).getMemberInfo(any(String.class));
         // 새로 생성된 메시지가 리턴됨.
         doReturn(message).when(messageService).sendMessage(any(MessageVO.class));
@@ -195,7 +195,7 @@ class MessageControllerUnitTest {
         // member 기반으로 token 생성
         TokenDto tokenDto = tokenProvider.generateTokenDto(token);
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
-        doReturn(member).doReturn(loginMember).doReturn(loginMember).doReturn(loginMember).doReturn(loginMember).doReturn(loginMember).when(memberService).getUserOne(any(Long.class));
+        doReturn(member).doReturn(loginMember).doReturn(loginMember).doReturn(loginMember).doReturn(loginMember).doReturn(loginMember).when(memberService).getMemberOne(any(Long.class));
         doReturn(messages).when(messageService).findMessages(any(Member.class));
 
         //when
@@ -228,7 +228,7 @@ class MessageControllerUnitTest {
         // loginMember 기반으로 token 생성
         TokenDto tokenDto = tokenProvider.generateTokenDto(token);
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
-        doReturn(loginMember).doReturn(member).when(memberService).getUserOne(anyLong());
+        doReturn(loginMember).doReturn(member).when(memberService).getMemberOne(anyLong());
         doReturn(readMessage).when(messageService).findMessage(anyLong());
         doNothing().when(authService).checkUserInfo(anyLong(), any(MemberResolverDto.class));
 
@@ -263,7 +263,7 @@ class MessageControllerUnitTest {
 
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
 
-        doReturn(loginMember).doReturn(member).when(memberService).getUserOne(anyLong());
+        doReturn(loginMember).doReturn(member).when(memberService).getMemberOne(anyLong());
 
         doReturn(readMessage).when(messageService).findMessage(anyLong());
 
