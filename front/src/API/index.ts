@@ -203,7 +203,7 @@ const studyInfo = (studyId: number) => {
 const studyMemberList = (studyId: number) => {
   return Send({
     method: Method.GET,
-    url: `/api/studies/${studyId}/study-members`,
+    url: `studies/${studyId}/study-members`,
   });
 };
 
