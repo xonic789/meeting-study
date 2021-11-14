@@ -15,9 +15,12 @@ import study.devmeetingstudy.annotation.dto.MemberResolverDto;
 import study.devmeetingstudy.common.exception.global.error.ErrorResponse;
 import study.devmeetingstudy.common.exception.global.response.ApiResDto;
 import study.devmeetingstudy.domain.member.Member;
+import study.devmeetingstudy.dto.member.request.MemberPatchReqDto;
 import study.devmeetingstudy.dto.member.response.MemberResDto;
 import study.devmeetingstudy.service.AuthService;
 import study.devmeetingstudy.service.MemberService;
+
+import javax.validation.Valid;
 
 @Api(tags = {"2. member"})
 
@@ -78,5 +81,24 @@ public class MemberController {
     public ResponseEntity<Void> delete(@ApiIgnore @JwtMember MemberResolverDto dto) {
         memberService.deleteMember(dto);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping
+    @ApiOperation(value = "사용자 정보 일부 수정", notes = "사용자 정보 일부 수정, 현재 지원 : 닉네임")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "사용자 정보 일부 수정 성공"),
+            @ApiResponse(code = 400, message = "잘못된 요청", response = ErrorResponse.class)
+    })
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<ApiResDto<MemberResDto>> changeMember(@ApiIgnore @JwtMember MemberResolverDto memberResolverDto,
+                                                                    @RequestBody @Valid MemberPatchReqDto memberPatchReqDto) {
+        authService.checkDuplicateNickname(memberPatchReqDto.getNickname());
+        return ResponseEntity.ok(
+                ApiResDto.<MemberResDto>builder()
+                        .message("성공")
+                        .status(HttpStatus.OK.value())
+                        .data(MemberResDto.from(memberService.changeMemberInfo(memberPatchReqDto, memberResolverDto)))
+                        .build()
+        );
     }
 }
