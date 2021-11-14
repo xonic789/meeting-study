@@ -200,6 +200,13 @@ const studyInfo = (studyId: number) => {
   });
 };
 
+const studyMemberList = (studyId: number) => {
+  return Send({
+    method: Method.GET,
+    url: `/api/studies/${studyId}/study-members`,
+  });
+};
+
 const modifyStudy = (studyId: number, study: StudyType) => {
   console.log('study', study);
 
@@ -233,6 +240,7 @@ export {
   getMyStudy,
   delStudy,
   studyInfo,
+  studyMemberList,
   modifyStudy,
 };
 
