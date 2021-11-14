@@ -1,8 +1,10 @@
 package study.devmeetingstudy.service.study;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import study.devmeetingstudy.annotation.dto.MemberResolverDto;
 import study.devmeetingstudy.common.uploader.Uploader;
 import study.devmeetingstudy.domain.Subject;
@@ -43,8 +45,11 @@ public class StudyFacadeServiceImpl implements StudyFacadeService {
     // TODO 파일이 비어있을시 기본 이미지 추가.
     @Transactional
     public CreatedStudyDto storeStudy(StudySaveReqDto studySaveReqDto, Member loginMember) throws IOException {
-        Map<String, String> uploadFileInfo = uploader.upload(studySaveReqDto.getFile(), DomainType.STUDY);
-        Study createdStudy = studyService.saveStudy(StudySaveVO.of(studySaveReqDto, subjectService.findSubjectById(studySaveReqDto.getSubjectId())));
+        Subject foundSubject = subjectService.findSubjectById(studySaveReqDto.getSubjectId());
+        Map<String, String> uploadFileInfo =
+                isFileExists(studySaveReqDto.getFile()) ?
+                        uploader.upload(studySaveReqDto.getFile(), DomainType.STUDY) : studyFileService.getDefaultFile(foundSubject.getName());
+        Study createdStudy = studyService.saveStudy(StudySaveVO.of(studySaveReqDto, foundSubject));
         StudyFile studyFile = studyFileService.saveStudyFile(createdStudy, uploadFileInfo);
         StudyMember studyMember = studyMemberService.saveStudyLeader(loginMember, createdStudy);
         return CreatedStudyDto.builder()
@@ -132,12 +137,16 @@ public class StudyFacadeServiceImpl implements StudyFacadeService {
     }
 
     private StudyFile replaceStudyFile(StudyPutReqDto studyPutReqDto) throws IOException {
-        if (studyPutReqDto.getFile() != null && !studyPutReqDto.getFile().isEmpty()) {
+        if (isFileExists(studyPutReqDto.getFile())) {
             Map<String, String> upload = uploader.upload(studyPutReqDto.getFile(), DomainType.STUDY);
             StudyFile studyFile = studyFileService.findStudyFileById(studyPutReqDto.getStudyFileId());
             return studyFileService.replaceStudyFile(upload, studyFile);
         }
         return studyFileService.findStudyFileById(studyPutReqDto.getStudyFileId());
+    }
+
+    private boolean isFileExists(MultipartFile multipartFile) {
+        return multipartFile != null && multipartFile.isEmpty();
     }
 
     @Transactional
