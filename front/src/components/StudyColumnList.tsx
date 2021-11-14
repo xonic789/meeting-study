@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { delStudy, member, studyInfo as studyInfoFunc } from '../API/index';
+import { delStudy, member, studyInfo as studyInfoFunc, studyMemberList } from '../API/index';
 import { Icon } from '../elements';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import person from '../asset/image/person.png';
@@ -10,6 +10,7 @@ import { ItemsType } from './Items';
 import { Link } from 'react-router-dom';
 import { userStatus } from '../ToolKit/user';
 import { deleteMessage, listMessage, message } from '../ToolKit/messages';
+import { AxiosResponse } from 'axios';
 
 interface Study {
   createdDate: string;
@@ -180,6 +181,7 @@ interface PayloadProps {
 function StudyColumnList({ items, index }: PropsType) {
   const Dispatch = useDispatch();
   const [messages, setMessages] = useState();
+  const [memberList, setMemberList] = useState<MemberType[]>([]);
   const messageData: PayloadProps = useSelector(message); // 리덕스 변수
   const userInfo = useSelector(userStatus);
 
@@ -209,9 +211,17 @@ function StudyColumnList({ items, index }: PropsType) {
   }, [onDelete]);
   console.log(listMessage, 'listMessage12312');
 
-  const clickStudy = async (e: React.MouseEvent<HTMLLIElement>) => {
+  const clickStudy = async (e: React.MouseEvent<HTMLLIElement>, studyId: number) => {
     e.stopPropagation();
+    e.currentTarget.parentNode?.childNodes.forEach((item) => {
+      if (item !== e.currentTarget) {
+        // @ts-ignore
+        item.classList.remove('open');
+      }
+    });
     e.currentTarget.classList.toggle('open');
+
+    await listMember(studyId);
   };
 
   const checkNull = (obj: object) => {
@@ -315,6 +325,26 @@ function StudyColumnList({ items, index }: PropsType) {
     return leader;
   };
 
+  const listMember = async (studyId: number) => {
+    interface MemberListType {
+      data: MemberType[];
+    }
+
+    try {
+      const {
+        data: { data },
+      }: AxiosResponse<MemberListType> = await studyMemberList(studyId);
+
+      setMemberList(data);
+    } catch (err) {
+      console.log('err', err);
+    }
+  };
+
+  useEffect(() => {
+    return () => setMemberList([]);
+  }, []);
+
   // JSX
   return (
     <div style={{ width: '500px', justifyContent: 'flex-start' }}>
@@ -324,7 +354,11 @@ function StudyColumnList({ items, index }: PropsType) {
         {index === 1 &&
           items.map((item: Study, idx: number) => {
             return (
-              <StudyItem key={idx} style={{ margin: '20px 0px', cursor: 'pointer' }} onClick={clickStudy}>
+              <StudyItem
+                key={idx}
+                style={{ margin: '20px 0px', cursor: 'pointer' }}
+                onClick={(e) => clickStudy(e, item.id)}
+              >
                 <div
                   className="study-top"
                   style={{
@@ -372,8 +406,12 @@ function StudyColumnList({ items, index }: PropsType) {
 
                   <div className="member-list">
                     <StudyMemberList>
-                      {item.studyMembers.map((member) => {
-                        return <li key={member.member.id}>{member.member.nickname}</li>;
+                      {memberList.map((member: MemberType) => {
+                        return (
+                          <li key={member.member.id}>
+                            <Link to={`/my/message/send?email=${member.member.email}`}>{member.member.nickname}</Link>
+                          </li>
+                        );
                       })}
                     </StudyMemberList>
                   </div>
