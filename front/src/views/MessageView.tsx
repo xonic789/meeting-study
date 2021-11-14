@@ -1,5 +1,6 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { sendMessage } from '../ToolKit/messages';
 import StudyHeader from '../components/StudyHeader';
 import { Button, Input, InputTitle, InputWrap, Main, Section, TextAreaInput } from '../elements';
@@ -8,6 +9,7 @@ interface MessageViewProps {}
 
 function MessageView({}: MessageViewProps) {
   const Dispatch = useDispatch();
+  const history = useHistory();
 
   const [inputs, setInputs] = useState({
     email: '',
@@ -15,6 +17,16 @@ function MessageView({}: MessageViewProps) {
   const [textInputs, setTextInputs] = useState({
     content: '',
   });
+
+  useEffect(() => {
+    // queryString
+    const sliceQS = history.location.search.slice(7);
+
+    setInputs({
+      email: sliceQS,
+    });
+  });
+
   const { email } = inputs;
   const { content } = textInputs;
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,6 +54,7 @@ function MessageView({}: MessageViewProps) {
 
     Dispatch(sendMessage(obj));
   };
+
   return (
     <>
       <StudyHeader>메세지 보내기</StudyHeader>
