@@ -53,7 +53,7 @@ public class StudyService {
     @Transactional
     public void deleteStudyById(Study foundStudy) {
         if (foundStudy.isNotDeleted()) {
-            Study.changeDeletionStatus(foundStudy, DeletionStatus.DELETED);
+            foundStudy.changeDeletionStatus(DeletionStatus.DELETED);
         }
     }
 

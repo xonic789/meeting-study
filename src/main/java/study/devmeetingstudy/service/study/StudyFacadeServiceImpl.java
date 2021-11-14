@@ -116,13 +116,13 @@ public class StudyFacadeServiceImpl implements StudyFacadeService {
     }
 
     private Online deleteOfflineAndSaveOnline(StudyPutReqDto studyPutReqDto, Study foundStudy) {
-        Study.removeOffline(foundStudy);
+        foundStudy.removeOffline();
         offlineService.deleteOffline(offlineService.findOfflineByStudyId(studyPutReqDto.getStudyId()));
         return onlineService.saveOnline(StudySaveReqDto.of(studyPutReqDto), foundStudy);
     }
 
     private Offline deleteOnlineAndSaveOffline(StudyPutReqDto studyPutReqDto, Study foundStudy) {
-        Study.removeOnline(foundStudy);
+        foundStudy.removeOnline();
         onlineService.deleteOnline(onlineService.findOnlineByStudyId(studyPutReqDto.getStudyId()));
         return offlineService.saveOffline(addressService.findAddressById(studyPutReqDto.getAddressId()), foundStudy);
     }
