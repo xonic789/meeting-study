@@ -24,7 +24,7 @@ function App() {
   return (
     <Switch>
       <Route exact path="/" component={Auth(MainView, null)} />
-      <Route exact path="/my/message/send" component={Auth(MessageView, null)} />
+      <Route exact path="/my/message/send" component={Auth(MessageView, true)} />
       <Route exact path="/register" component={Auth(RegisterView, false)} />
       <Route exact path="/login" component={Auth(LoginView, false)} />
       <Route exact path="/study/create" component={Auth(CreateStudyView, true)} />
