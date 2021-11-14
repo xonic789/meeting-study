@@ -305,7 +305,6 @@ function StudyColumnList({ items, index }: PropsType) {
   // JSX
   return (
     <div style={{ width: '500px', justifyContent: 'flex-start' }}>
-      {index === 1 && <h3>총 {items.length}개</h3>}
       <hr />
       <ul style={{ padding: '0px 10px' }}>
         {index === 1 &&
