@@ -11,6 +11,7 @@ import study.devmeetingstudy.domain.base.BaseTimeEntity;
 import study.devmeetingstudy.domain.member.enums.Authority;
 import study.devmeetingstudy.domain.member.enums.MemberStatus;
 import study.devmeetingstudy.domain.message.Message;
+import study.devmeetingstudy.dto.member.request.MemberPatchReqDto;
 import study.devmeetingstudy.dto.member.request.MemberSignupReqDto;
 
 import javax.persistence.*;
@@ -90,10 +91,13 @@ public class Member extends BaseTimeEntity {
         return Objects.hash(id, email, nickname, password, authority, grade, status, messages);
     }
 
-    // 참고 : set 메서드는 롬복으로 열어두면 원치 않는 값을 변경되는걸 열어두는 행위이다.
-    // 필요한것만 열어두는 습관을 두자
     public void changeStatus(MemberStatus status){
         this.status = status;
+    }
+
+    public Member changeMember(MemberPatchReqDto memberPatchReqDto) {
+        this.nickname = memberPatchReqDto.getNickname();
+        return this;
     }
 }
 

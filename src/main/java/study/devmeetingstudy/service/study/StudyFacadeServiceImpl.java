@@ -68,7 +68,7 @@ public class StudyFacadeServiceImpl implements StudyFacadeService {
     public StudyDto findStudyByStudyId(Long studyId) {
         Study study = studyService.findStudyFetchJoinById(studyId);
         return StudyDto.of(study,
-                studyMemberService.findStudyMemberByStudyIdAndStudyAuth(study.getId(), StudyAuth.LEADER),
+                studyMemberService.findStudyMembersByStudyId(studyId),
                 studyFileService.findStudyFileByStudyId(study.getId()));
     }
 
@@ -149,10 +149,11 @@ public class StudyFacadeServiceImpl implements StudyFacadeService {
 
     public List<StudyDto> findStudiesByMemberId(Long memberId) {
         List<StudyMember> studyMembers = studyMemberService.findStudyMembersByMemberId(memberId);
-        return studyMembers.stream().map(studyMember -> {
-            List<StudyMember> studyMemberOne = new ArrayList<>();
-            studyMemberOne.add(studyMember);
-            return StudyDto.of(studyMember.getStudy(), studyMemberOne, studyFileService.findStudyFileByStudyId(studyMember.getStudy().getId()));
-        }).collect(Collectors.toList());
+        return studyMembers.stream().map(studyMember ->
+            StudyDto.of(
+                    studyMember.getStudy(),
+                    studyMemberService.findStudyMemberByStudyIdAndStudyAuth(studyMember.getStudy().getId(), StudyAuth.LEADER),
+                    studyFileService.findStudyFileByStudyId(studyMember.getStudy().getId()))
+        ).collect(Collectors.toList());
     }
 }
