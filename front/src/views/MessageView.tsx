@@ -1,4 +1,3 @@
-
 import React, { ChangeEvent, useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,7 +6,6 @@ import StudyHeader from '../components/StudyHeader';
 import { Button, Input, InputTitle, InputWrap, Main, Section, TextAreaInput } from '../elements';
 import { PayloadSuccessType, ResSendMessage, ResSendMessageButton } from '../ToolKit/axiosType';
 import { AppDispatch } from '../store';
-import { useHistory } from 'react-router';
 
 interface MessageViewProps {}
 
