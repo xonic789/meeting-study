@@ -27,7 +27,7 @@ function MessageView({}: MessageViewProps) {
     setInputs({
       email: sliceQS,
     });
-  });
+  }, []);
 
   const { email } = inputs;
   const { content } = textInputs;
@@ -38,7 +38,7 @@ function MessageView({}: MessageViewProps) {
       [name]: value,
     });
   };
-  const onChangeText = (e: any) => {
+  const onChangeText = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setTextInputs({
       ...textInputs,
