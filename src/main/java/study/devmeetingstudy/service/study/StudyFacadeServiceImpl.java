@@ -143,10 +143,10 @@ public class StudyFacadeServiceImpl implements StudyFacadeService {
             return studyFileService.replaceStudyFile(upload, studyFile);
         }
         return studyFileService.findStudyFileById(studyPutReqDto.getStudyFileId());
-    }
+    }   
 
     private boolean isFileExists(MultipartFile multipartFile) {
-        return multipartFile != null && multipartFile.isEmpty();
+        return multipartFile != null && !multipartFile.isEmpty();
     }
 
     @Transactional
