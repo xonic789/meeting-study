@@ -42,7 +42,7 @@ class MessageTest {
         Message message = getMessage();
 
         //when
-        Message.changeReadStatus(MessageReadStatus.READ, message);
+        message.changeReadStatus(MessageReadStatus.READ);
 
         //then
         assertEquals(MessageReadStatus.READ, message.getStatus());
@@ -66,7 +66,7 @@ class MessageTest {
         //given
         Message message = getMessage();
         //when
-        Message.changeDeletionStatus(DeletionStatus.DELETED, message);
+        message.changeDeletionStatus(DeletionStatus.DELETED);
         //then
         assertEquals(DeletionStatus.DELETED, message.getDeletionStatus());
     }

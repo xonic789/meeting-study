@@ -9,8 +9,9 @@ import moment from 'moment';
 import { ItemsType } from './Items';
 import { Link } from 'react-router-dom';
 import { userStatus } from '../ToolKit/user';
-import { deleteMessage, listMessage, message } from '../ToolKit/messages';
 import { AxiosResponse } from 'axios';
+import { deleteMessage, listMessage, message, readMessage } from '../ToolKit/messages';
+import { ResSendMessage } from '../ToolKit/axiosType';
 
 interface Study {
   createdDate: string;
@@ -179,12 +180,28 @@ interface PayloadProps {
     };
   };
 }
+
 function StudyColumnList({ items, index, callStudyList }: PropsType) {
+
+interface ItemType {
+  content: string;
+  createdDate: string;
+  id: number;
+  lastUpdateDate: string;
+  member: string;
+  email: string;
+  grade: number;
+  nickname: string;
+  sender: string;
+  status: string;
+}
   const Dispatch = useDispatch();
   const [messages, setMessages] = useState();
   const [memberList, setMemberList] = useState<MemberType[]>([]);
   const messageData: PayloadProps = useSelector(message); // 리덕스 변수
   const userInfo = useSelector(userStatus);
+
+  console.log("messageData",messageData);
 
   const [listMessage, setListMessage] = useState(messageData?.payload?.payload?.data);
   // console.log('List:items', items);
@@ -194,14 +211,20 @@ function StudyColumnList({ items, index, callStudyList }: PropsType) {
   const contentMaxRef = useRef<HTMLDivElement>(null);
   const contentSliceRef = useRef<HTMLDivElement>(null);
   // 2. onClick 함수에서 처리하기
-  const onClick = (data: any, idx: number, e: any) => {
-    setMessages(data); // data
+  const onClick = async (item: ItemType, e: any) => {
+    // setMessages(item); // data
     const parent = e.currentTarget.childNodes[0].childNodes[1];
     const contentSlice = parent.childNodes[2];
     const contentMax = parent.childNodes[3];
 
+    // console.log('item', item.);
+
     contentSlice.classList.toggle('open');
     contentMax.classList.toggle('open');
+    // console.log('item', item);
+    Dispatch(readMessage(item.id));
+    // console.log('messagessssz', Read);
+    // Dispatch(readMessage(data.id));
   };
   const onDelete = (e: any, item: any) => {
     console.debug('kk', item);
@@ -392,7 +415,7 @@ function StudyColumnList({ items, index, callStudyList }: PropsType) {
                   key={idx}
                   ref={itemRef}
                   style={{ margin: '20px 0px', cursor: 'pointer' }}
-                  onClick={(e) => onClick(item, idx, e)}
+                  onClick={(e) => onClick(item, e)}
                 >
                   <div style={{ display: 'flex' }}>
                     <div style={{ paddingRight: '20px' }}>

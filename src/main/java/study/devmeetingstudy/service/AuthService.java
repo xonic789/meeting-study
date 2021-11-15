@@ -130,6 +130,8 @@ public class AuthService {
     public boolean isExistsNickname(String nickname) {
         return memberRepository.existsByNickname(nickname);
     }
-    
 
+    public void checkDuplicateNickname(String nickname) {
+        if (isExistsNickname(nickname)) throw new BusinessException("중복된 닉네임 입니다", ErrorCode.NICKNAME_DUPLICATION);
+    }
 }

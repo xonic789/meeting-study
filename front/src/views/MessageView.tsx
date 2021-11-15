@@ -1,15 +1,19 @@
+
 import React, { ChangeEvent, useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { sendMessage } from '../ToolKit/messages';
 import StudyHeader from '../components/StudyHeader';
 import { Button, Input, InputTitle, InputWrap, Main, Section, TextAreaInput } from '../elements';
+import { PayloadSuccessType, ResSendMessage, ResSendMessageButton } from '../ToolKit/axiosType';
+import { AppDispatch } from '../store';
+import { useHistory } from 'react-router';
 
 interface MessageViewProps {}
 
 function MessageView({}: MessageViewProps) {
-  const Dispatch = useDispatch();
   const history = useHistory();
+  const Dispatch: AppDispatch = useDispatch();
 
   const [inputs, setInputs] = useState({
     email: '',
@@ -51,8 +55,17 @@ function MessageView({}: MessageViewProps) {
       email,
       content,
     };
-
-    Dispatch(sendMessage(obj));
+    //ResSendMessageButton 타입 넣는거 도와주세요 help
+    const dispatch: any = await Dispatch(sendMessage(obj));
+    try {
+      const statusCode = dispatch.payload.payload.status;
+      if (statusCode === 201) {
+        history.goBack();
+      }
+    } catch {
+      const notUser = dispatch.payload.message;
+      alert(notUser);
+    }
   };
 
   return (

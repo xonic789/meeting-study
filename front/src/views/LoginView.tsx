@@ -75,7 +75,7 @@ function LoginView() {
 
       return;
     }
-    history.push('/');
+    history.go(-1);
   };
 
   return (

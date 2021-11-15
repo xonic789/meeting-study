@@ -140,7 +140,7 @@ class MessageControllerUnitTest {
         // sender userOne
         // member memberInfo
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
-        doReturn(loginMember).when(memberService).getUserOne(any(Long.class));
+        doReturn(loginMember).when(memberService).getMemberOne(any(Long.class));
         doReturn(member).when(memberService).getMemberInfo(any(String.class));
         // 새로 생성된 메시지가 리턴됨.
         doReturn(message).when(messageService).sendMessage(any(MessageVO.class));
@@ -195,7 +195,7 @@ class MessageControllerUnitTest {
         // member 기반으로 token 생성
         TokenDto tokenDto = tokenProvider.generateTokenDto(token);
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
-        doReturn(member).doReturn(loginMember).doReturn(loginMember).doReturn(loginMember).doReturn(loginMember).doReturn(loginMember).when(memberService).getUserOne(any(Long.class));
+        doReturn(member).doReturn(loginMember).doReturn(loginMember).doReturn(loginMember).doReturn(loginMember).doReturn(loginMember).when(memberService).getMemberOne(any(Long.class));
         doReturn(messages).when(messageService).findMessages(any(Member.class));
 
         //when
@@ -221,14 +221,14 @@ class MessageControllerUnitTest {
         Message createdMessage = createMessage(1L, member, loginMember);
 
         //생성 후 메시지 읽음 상태 수정
-        Message readMessage = Message.changeReadStatus(MessageReadStatus.READ, createdMessage);
+        Message readMessage = createdMessage.changeReadStatus(MessageReadStatus.READ);
         // 토큰 생성 및 발급
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(loginMember.getAuthority().toString());
         Authentication token = new UsernamePasswordAuthenticationToken(loginMember.getId(), loginMember.getPassword(), Collections.singleton(grantedAuthority));
         // loginMember 기반으로 token 생성
         TokenDto tokenDto = tokenProvider.generateTokenDto(token);
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
-        doReturn(loginMember).doReturn(member).when(memberService).getUserOne(anyLong());
+        doReturn(loginMember).doReturn(member).when(memberService).getMemberOne(anyLong());
         doReturn(readMessage).when(messageService).findMessage(anyLong());
         doNothing().when(authService).checkUserInfo(anyLong(), any(MemberResolverDto.class));
 
@@ -254,7 +254,7 @@ class MessageControllerUnitTest {
         Message createdMessage = createMessage(1L, loginMember, member);
 
         //생성 후 메시지 읽음 상태 수정
-        Message readMessage = Message.changeReadStatus(MessageReadStatus.READ, createdMessage);
+        Message readMessage = createdMessage.changeReadStatus(MessageReadStatus.READ);
         // 토큰 생성 및 발급
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(loginMember.getAuthority().toString());
         Authentication token = new UsernamePasswordAuthenticationToken(loginMember.getId(), loginMember.getPassword(), Collections.singleton(grantedAuthority));
@@ -263,7 +263,7 @@ class MessageControllerUnitTest {
 
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
 
-        doReturn(loginMember).doReturn(member).when(memberService).getUserOne(anyLong());
+        doReturn(loginMember).doReturn(member).when(memberService).getMemberOne(anyLong());
 
         doReturn(readMessage).when(messageService).findMessage(anyLong());
 
@@ -288,7 +288,7 @@ class MessageControllerUnitTest {
         // 메시지 생성
         Message createdMessage = createMessage(1L, loginMember, member);
         //생성 후 메시지 삭제 상태 수정
-        Message deletedMessage = Message.changeDeletionStatus(DeletionStatus.DELETED, createdMessage);
+        Message deletedMessage = createdMessage.changeDeletionStatus(DeletionStatus.DELETED);
         // 토큰 생성 및 발급
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(loginMember.getAuthority().toString());
         Authentication token = new UsernamePasswordAuthenticationToken(loginMember.getId(), loginMember.getPassword(), Collections.singleton(grantedAuthority));
@@ -316,7 +316,7 @@ class MessageControllerUnitTest {
         // 메시지 생성
         Message createdMessage = createMessage(1L, member, loginMember);
         //생성 후 메시지 삭제 상태 수정
-        Message deletedMessage = Message.changeDeletionStatus(DeletionStatus.DELETED, createdMessage);
+        Message deletedMessage = createdMessage.changeDeletionStatus(DeletionStatus.DELETED);
         // 토큰 생성 및 발급
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(loginMember.getAuthority().toString());
         Authentication token = new UsernamePasswordAuthenticationToken(loginMember.getId(), loginMember.getPassword(), Collections.singleton(grantedAuthority));

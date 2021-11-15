@@ -7,6 +7,7 @@ import study.devmeetingstudy.annotation.dto.MemberResolverDto;
 import study.devmeetingstudy.common.exception.global.error.exception.UserException;
 import study.devmeetingstudy.domain.member.Member;
 import study.devmeetingstudy.domain.member.enums.MemberStatus;
+import study.devmeetingstudy.dto.member.request.MemberPatchReqDto;
 import study.devmeetingstudy.repository.MemberRepository;
 import study.devmeetingstudy.util.SecurityUtil;
 
@@ -31,14 +32,20 @@ public class MemberService {
     }
 
     public void deleteMember(MemberResolverDto dto){
-       Member findMember = getUserOne(dto.getId());
+       Member findMember = getMemberOne(dto.getId());
        findMember.changeStatus(MemberStatus.OUT);
     }
 
-    public Member getUserOne(Long id){
+    public Member getMemberOne(Long id){
 
         return memberRepository.findById(id)
                 .orElseThrow(() -> new UserException("로그인 유저 정보가 없습니다."));
     }
 
+    // 일단 닉네임만 변경...
+    @Transactional
+    public Member changeMemberInfo(MemberPatchReqDto memberPatchReqDto, MemberResolverDto memberResolverDto) {
+        Member foundMember = getMemberOne(memberResolverDto.getId());
+        return foundMember.changeMember(memberPatchReqDto);
+    }
 }

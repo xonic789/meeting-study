@@ -87,7 +87,7 @@ public class StudyMemberController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ApiResDto<StudyMemberResDto>> applyStudyMember(@PathVariable Long studyId,
                                                                          @ApiIgnore @JwtMember MemberResolverDto memberResolverDto) {
-        StudyMember studyMember = studyMemberService.saveStudyMember(memberService.getUserOne(memberResolverDto.getId()), studyService.findStudyById(studyId));
+        StudyMember studyMember = studyMemberService.saveStudyMember(memberService.getMemberOne(memberResolverDto.getId()), studyService.findStudyById(studyId));
         return ResponseEntity.created(URI.create("/api/studies" + studyId + "/study-members" + studyMember.getId()))
                 .body(
                         ApiResDto.<StudyMemberResDto>builder()

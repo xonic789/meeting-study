@@ -46,7 +46,7 @@ public class MessageController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ApiResDto<MessageResDto>> saveMessage(@ApiIgnore @JwtMember MemberResolverDto memberResolverDto,
                                                                 @Valid @RequestBody MessageReqDto messageReqDto){
-        Member loginMember = memberService.getUserOne(memberResolverDto.getId());
+        Member loginMember = memberService.getMemberOne(memberResolverDto.getId());
         Member member = memberService.getMemberInfo(messageReqDto.getEmail());
         Message message = messageService.sendMessage(new MessageVO(messageReqDto.getContent(), member, loginMember));
         return ResponseEntity
@@ -68,7 +68,7 @@ public class MessageController {
     })
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<ApiResDto<List<MessageResDto>>> getMessages(@ApiIgnore @JwtMember MemberResolverDto MemberResolverDto){
-        Member loginMember = memberService.getUserOne(MemberResolverDto.getId());
+        Member loginMember = memberService.getMemberOne(MemberResolverDto.getId());
         List<Message> messages = messageService.findMessages(loginMember);
         return ResponseEntity.ok(
                 ApiResDto.<List<MessageResDto>>builder()
@@ -76,7 +76,7 @@ public class MessageController {
                         .status(HttpStatus.OK.value())
                         .data(messages.stream()
                                 .map((message) ->
-                                MessageResDto.of(message, memberService.getUserOne(message.getSenderId()), loginMember))
+                                MessageResDto.of(message, memberService.getMemberOne(message.getSenderId()), loginMember))
                                 .collect(Collectors.toList()))
                         .build()
         );
@@ -94,14 +94,14 @@ public class MessageController {
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<ApiResDto<MessageResDto>> getMessage(@ApiIgnore @JwtMember MemberResolverDto memberResolverDto,
                                                                @PathVariable Long messageId){
-        Member loginMember = memberService.getUserOne(memberResolverDto.getId());
+        Member loginMember = memberService.getMemberOne(memberResolverDto.getId());
         Message message = messageService.findMessage(messageId);
         authService.checkUserInfo(message.getMember().getId(), memberResolverDto);
         return ResponseEntity.ok(
                 ApiResDto.<MessageResDto>builder()
                         .message("성공")
                         .status(HttpStatus.OK.value())
-                        .data(MessageResDto.of(message, memberService.getUserOne(message.getSenderId()), loginMember))
+                        .data(MessageResDto.of(message, memberService.getMemberOne(message.getSenderId()), loginMember))
                         .build()
         );
     }
