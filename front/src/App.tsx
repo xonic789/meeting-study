@@ -24,11 +24,11 @@ function App() {
   return (
     <Switch>
       <Route exact path="/" component={Auth(MainView, null)} />
-      <Route exact path="/my/message/send" component={Auth(MessageView, null)} />
+      <Route exact path="/my/message/send" component={Auth(MessageView, true)} />
       <Route exact path="/register" component={Auth(RegisterView, false)} />
       <Route exact path="/login" component={Auth(LoginView, false)} />
       <Route exact path="/study/create" component={Auth(CreateStudyView, true)} />
-      <Route exact path="/study/modify/:studyInfo" component={Auth(CreateStudyView, true)} />
+      <Route exact path="/study/modify" component={Auth(CreateStudyView, true)} />
       <Route path="/my" component={Auth(MyStudyView, true)} />
       <Route exact path="*" component={Auth(NotFoundView, null)} />
     </Switch>
