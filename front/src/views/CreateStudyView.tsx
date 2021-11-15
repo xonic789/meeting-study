@@ -3,10 +3,11 @@ import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import moment from 'moment';
 import queryString from 'query-string';
-import { getSubjects, saveStudty, modifyStudy } from '../API/index';
+import { getSubjects, saveStudty, modifyStudy, studyInfo } from '../API/index';
 import { StudyType } from '../ToolKit/userType';
 import { Main, Section, InputWrap, Input, InputTitle, Button } from '../elements';
 import StudyHeader from '../components/StudyHeader';
+import { AxiosResponse } from 'axios';
 
 const Select = styled.select`
   width: 100%;
@@ -55,7 +56,7 @@ function CreateStudyView() {
     content: '',
     startDate: moment().format('YYYY-MM-DD'),
     endDate: '',
-    file: null,
+    files: null,
     studyFileId: 0,
     sido: '',
     gun: '',
@@ -76,7 +77,7 @@ function CreateStudyView() {
     content, // 내용
     startDate, // 시작 일
     endDate, // 종료 일
-    file, // 사진
+    files, // 사진
     studyFileId, // 파일 Id
     sido, // 시도
     gun, // 군
@@ -94,7 +95,7 @@ function CreateStudyView() {
       setInputs({
         ...inputs,
         // @ts-ignore
-        file: e.target.files[0],
+        files: e.target.files[0],
       });
     } else if (name === 'dtype') {
       console.log('dtype', dtype);
@@ -152,60 +153,81 @@ function CreateStudyView() {
   }, []);
 
   useEffect(() => {
-    interface QueryStringType {
-      id: string;
-      createdDate: string;
-      dtype: string;
-      endDate: string;
-      files: string;
-      studyFileId: string;
-      lastUpdateDate: string;
-      maxMember: string;
-      offline: string;
-      online: string;
-      onlineId: string;
-      startDate: string;
-      studyMembers: string;
-      studyType: string;
-      subject: string;
-      title: string;
-      content: string;
-    }
+    const sliceStudyId = history.location.search.slice(9);
 
-    const slicePathName = history.location.pathname.slice(7, 13);
-    setPathName(slicePathName);
+    if (history.location.pathname.slice(7) === 'modify') {
+      setPathName('modify');
 
-    if (slicePathName === 'modify') {
-      // @ts-ignore
-      const query: QueryStringType = queryString.parse(history.location.pathname);
+      setStudyId(parseInt(sliceStudyId));
 
-      const obj = {
-        id: query.id,
-        title: query.title,
-        studyType: query.studyType,
-        maxMember: parseInt(query.maxMember),
-        dtype: query.dtype,
-        onlineType: queryString.parse(query.online).onlineType as string,
-        link: queryString.parse(query.online).link as string,
-        offline: queryString.parse(query.offline).null as string,
-        onlineId: parseInt(queryString.parse(query.online).id as string),
-        subjectName: queryString.parse(query.subject).name as string,
-        subjectId: parseInt(queryString.parse(query.subject).id as string),
-        content: query.content,
-        startDate: query.startDate,
-        endDate: query.endDate,
-        file: null,
-        studyFileId: parseInt(queryString.parse(query.files).id as string),
-        // sido,
-        // gun,
-        // gu,
+      interface StudyInputsType {
+        data: {
+          title: string;
+          studyType: string;
+          maxMember: number;
+          dtype: string;
+          online: {
+            id: number;
+            link: string;
+            onlineType: string;
+          };
+          offlineId: number;
+          onlineType: string;
+          link: string;
+          subject: {
+            id: number;
+            name: string;
+          };
+          content: string;
+          startDate: string;
+          endDate: string;
+          files: {
+            id: number;
+            name: string;
+            path: string;
+          }[];
+          studyFileId: number;
+          sido: string;
+          gun: string;
+          gu: string;
+        };
+      }
+
+      const getStudyInfo = async (studyId: number) => {
+        const {
+          data: { data },
+        }: AxiosResponse<StudyInputsType> = await studyInfo(studyId);
+
+        const obj = {
+          title: data.title,
+          studyType: data.studyType,
+          maxMember: data.maxMember,
+          dtype: data.dtype,
+          onlineId: data.online.id,
+          offlineId: data.offlineId,
+          onlineType: data.online.onlineType,
+          link: data.online.link,
+          subjectName: data.subject.name,
+          subjectId: data.subject.id,
+          content: data.content,
+          startDate: data.startDate,
+          endDate: data.endDate,
+          files: null,
+          studyFileId: data.files[0].id,
+          sido: data.sido || '',
+          gun: data.gun || '',
+          gu: data.gu || '',
+        };
+
+        console.log('obj', obj);
+
+        setInputs({
+          ...inputs,
+          ...obj,
+        });
       };
 
-      setStudyId(parseInt(query.id as string));
-      setInputs({
-        ...inputs,
-        ...obj,
-      });
+      getStudyInfo(parseInt(sliceStudyId));
     }
   }, []);
 
@@ -238,9 +260,9 @@ function CreateStudyView() {
 
         console.log('inputs', inputs);
 
-        const id = 1;
+        // const id = 1;
 
-        formData.append('addressId', id.toString());
+        // formData.append('addressId', id.toString());
         formData.append('title', title);
         formData.append('studyType', studyType);
         formData.append('maxMember', maxMember.toString());
@@ -251,17 +273,13 @@ function CreateStudyView() {
         formData.append('content', content);
         formData.append('startDate', startDate);
         formData.append('endDate', endDate);
-        formData.append('studyFileId', studyFileId.toString());
 
-        if (file !== null) {
-          formData.append('file', file);
+        if (files !== null) {
+          formData.append('file', files);
         }
 
-        console.log('file', file);
+        console.log('files', files);
 
-        dtype === 'ONLINE'
-          ? formData.append('onlineId', onlineId.toString())
-          : formData.append('offlineId', offlineId.toString());
         if (pathName === 'create') {
           console.log('create');
           // @ts-ignore
@@ -269,7 +287,13 @@ function CreateStudyView() {
           alert('스터디 등록 성공!');
         } else {
           console.log('modify');
-          console.log('file', file);
+          console.log('files', files);
+
+          dtype === 'ONLINE'
+            ? formData.append('onlineId', onlineId.toString())
+            : formData.append('offlineId', offlineId.toString());
+
+          formData.append('studyFileId', studyFileId.toString());
 
           // @ts-ignore
           await modifyStudy(studyId, formData);

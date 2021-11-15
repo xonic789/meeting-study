@@ -1,4 +1,6 @@
-import React, { ChangeEvent, useState } from 'react';
+
+import React, { ChangeEvent, useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { sendMessage } from '../ToolKit/messages';
 import StudyHeader from '../components/StudyHeader';
@@ -19,6 +21,16 @@ function MessageView({}: MessageViewProps) {
   const [textInputs, setTextInputs] = useState({
     content: '',
   });
+
+  useEffect(() => {
+    // queryString
+    const sliceQS = history.location.search.slice(7);
+
+    setInputs({
+      email: sliceQS,
+    });
+  });
+
   const { email } = inputs;
   const { content } = textInputs;
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,6 +67,7 @@ function MessageView({}: MessageViewProps) {
       alert(notUser);
     }
   };
+
   return (
     <>
       <StudyHeader>메세지 보내기</StudyHeader>

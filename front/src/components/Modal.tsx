@@ -86,6 +86,17 @@ interface PropsType {
 
 function Modal({ study, modalStateChange }: PropsType) {
   const [studyInfo, setstudyInfo] = useState({});
+  const [leader, setLeader] = useState<MemberType>({
+    id: 0,
+    member: {
+      email: '',
+      grade: 0,
+      id: 0,
+      nickname: '',
+    },
+    studyAuth: '',
+    studyStatus: '',
+  });
 
   console.log('study', study);
 
@@ -112,7 +123,12 @@ function Modal({ study, modalStateChange }: PropsType) {
     studyStatus: string;
   }
 
-  const leader: MemberType = study.studyMembers.filter((leader: MemberType) => leader.studyAuth === 'LEADER')[0];
+  useEffect(() => {
+    const leader: MemberType = study.studyMembers.filter((leader: MemberType) => leader.studyAuth === 'LEADER')[0];
+    setLeader(leader);
+  });
+
+  // 수정
 
   const sliceDate = (start: string, end: string) => {
     const startYear = start.slice(0, 4);
