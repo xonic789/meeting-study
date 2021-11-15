@@ -52,6 +52,7 @@ interface Study {
 interface PropsType {
   items?: any;
   index: number;
+  callStudyList?: () => void;
 }
 
 const initialStudy = {
@@ -178,7 +179,7 @@ interface PayloadProps {
     };
   };
 }
-function StudyColumnList({ items, index }: PropsType) {
+function StudyColumnList({ items, index, callStudyList }: PropsType) {
   const Dispatch = useDispatch();
   const [messages, setMessages] = useState();
   const [memberList, setMemberList] = useState<MemberType[]>([]);
@@ -246,6 +247,9 @@ function StudyColumnList({ items, index }: PropsType) {
         const res = await delStudy(leader.member.id, leader.member.nickname, study.id);
         if (res.status === 204) {
           alert('삭제 성공!');
+          if (callStudyList) {
+            callStudyList();
+          }
         }
       }
     } catch (err: any) {

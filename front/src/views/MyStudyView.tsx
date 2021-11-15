@@ -129,21 +129,6 @@ function MyStudyView() {
     Dispatch(listMessage());
   }, []);
 
-  useEffect(() => {
-    const callMyStudy = async () => {
-      try {
-        const {
-          data: { data },
-        } = await getMyStudy();
-
-        setStudy(data);
-      } catch (err) {
-        console.log('스터디 불러오기 실패');
-      }
-    };
-    callMyStudy();
-  }, []);
-
   return (
     <>
       <StudyHeader>MY 스터디</StudyHeader>
@@ -183,7 +168,7 @@ function MyStudyView() {
           </SelectItem>
           <div style={{ marginTop: '50px' }}>
             {pathname === '/my/info' && <Info onChange={onChange} />}
-            {pathname === '/my/study' && <Study study={study} index={item} />}
+            {pathname === '/my/study' && <Study index={item} />}
             {pathname === '/my/message' && <Message index={item} />}
             {pathname === '/my/secession' && <Secession onChange={onChange} />}
           </div>
@@ -229,11 +214,31 @@ interface PType {
   index: any;
 }
 
-export function Study({ study, index }: PType) {
-  console.log('items', study);
+export function Study({ index }: PType) {
+  const [study, setStudy] = useState([]);
+
+  const callMyStudy = async () => {
+    try {
+      const {
+        data: { data },
+      } = await getMyStudy();
+
+      setStudy(data);
+    } catch (err) {
+      console.log('스터디 불러오기 실패');
+    }
+  };
+  useEffect(() => {
+    callMyStudy();
+  }, []);
+
+  const callStudyList = () => {
+    callMyStudy();
+  };
+
   return (
     <>
-      <StudyColumnList items={study} index={index} />
+      <StudyColumnList items={study} index={index} callStudyList={callStudyList} />
     </>
   );
 }
