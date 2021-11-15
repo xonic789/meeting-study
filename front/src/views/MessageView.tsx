@@ -27,7 +27,7 @@ function MessageView({}: MessageViewProps) {
     setInputs({
       email: sliceQS,
     });
-  });
+  }, []);
 
   const { email } = inputs;
   const { content } = textInputs;
