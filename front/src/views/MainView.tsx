@@ -191,7 +191,7 @@ function OpenStudyView() {
       <StudyHeader />
       {/* ype 'object | ItemsType' is not assignable to type 'ItemsType'.
   Type '{}' is missing the following properties from type 'ItemsType': createdDate, dtype, endDate, files, and 8 more.ts(2322 */}
-      {modal.open && <StudyModal study={modal.study} modalStateChange={modalStateChange} />}
+      {modal.open && <StudyModal studyId={modal.study.id} modalStateChange={modalStateChange} />}
       <Main>
         <Section>
           <div
