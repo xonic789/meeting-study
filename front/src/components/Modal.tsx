@@ -80,12 +80,12 @@ const MemuItem = styled.li`
 `;
 
 interface PropsType {
-  study: ItemsType;
+  studyId: number;
   modalStateChange: (open: boolean, study: ItemsType, del: boolean) => void;
 }
 
-function Modal({ study, modalStateChange }: PropsType) {
-  const [studyInfo, setstudyInfo] = useState({});
+function Modal({ studyId, modalStateChange }: PropsType) {
+  const [studyInfo, setstudyInfo] = useState<ItemsType>(initalStudy);
   const [leader, setLeader] = useState<MemberType>({
     id: 0,
     member: {
@@ -98,8 +98,6 @@ function Modal({ study, modalStateChange }: PropsType) {
     studyStatus: '',
   });
 
-  console.log('study', study);
-
   useEffect(() => {
     const infoStudy = async (studyId: number) => {
       const {
@@ -108,7 +106,7 @@ function Modal({ study, modalStateChange }: PropsType) {
       setstudyInfo(data);
     };
 
-    infoStudy(study.id);
+    infoStudy(studyId);
   }, []);
 
   interface MemberType {
@@ -124,7 +122,7 @@ function Modal({ study, modalStateChange }: PropsType) {
   }
 
   useEffect(() => {
-    const leader: MemberType = study.studyMembers.filter((leader: MemberType) => leader.studyAuth === 'LEADER')[0];
+    const leader: MemberType = studyInfo.studyMembers.filter((leader: MemberType) => leader.studyAuth === 'LEADER')[0];
     setLeader(leader);
   });
 
@@ -151,7 +149,7 @@ function Modal({ study, modalStateChange }: PropsType) {
     try {
       const {
         data: { data },
-      } = await applicationStudy(study.id);
+      } = await applicationStudy(studyId);
 
       console.log('data', data);
 
@@ -172,34 +170,34 @@ function Modal({ study, modalStateChange }: PropsType) {
       <StudyModal>
         <ModalTop>
           <div>
-            <h2 className="studyTitle">{study.title}</h2>
+            <h2 className="studyTitle">{studyInfo.title}</h2>
             <Icon onClick={() => modalStateChange(false, { ...initalStudy }, false)}>
               <CloseIcon />
             </Icon>
           </div>
           <div className="leader">
-            <span>{leader.member.nickname}</span>
+            <span>{leader?.member.nickname}</span>
             <button type="button" onClick={joinStudy}>
               신청
             </button>
           </div>
-          <img src={study.files[0].path} alt="스터디 사진" />
+          <img src={studyInfo.files[0].path} alt="스터디 사진" />
         </ModalTop>
         <ModalBottom>
           <MenuList>
             <MemuItem>
               <span>인원 수</span>
               <span>
-                {study.studyMembers.length} / {study.maxMember}
+                {studyInfo.studyMembers.length} / {studyInfo.maxMember}
               </span>
             </MemuItem>
             <MemuItem>
               <span>언어</span>
-              <span>{study.subject.name}</span>
+              <span>{studyInfo.subject.name}</span>
             </MemuItem>
             <MemuItem>
               <span>기간</span>
-              <span>{sliceDate(study.startDate, study.endDate)}</span>
+              <span>{sliceDate(studyInfo.startDate, studyInfo.endDate)}</span>
             </MemuItem>
           </MenuList>
           <div>
