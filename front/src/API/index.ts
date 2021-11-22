@@ -70,6 +70,13 @@ const myInfo = () => {
   });
 };
 
+const deleteUser = () => {
+  return Send({
+    method: Method.DELETE,
+    url: '/member/me',
+  });
+};
+
 // member
 const member = (email: string) => {
   return Send({
@@ -225,6 +232,7 @@ export {
   login_user,
   reissueToken,
   myInfo,
+  deleteUser,
   member,
   sendMessages,
   listMessages,
