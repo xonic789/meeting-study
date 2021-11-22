@@ -195,10 +195,6 @@ export function Info({ onChange }: PropsType) {
         </div>
         <div>
           <InputWrap>
-            <InputTitle htmlFor="email">이메일</InputTitle>
-            <Input id="email" name="email" type="email" onChange={onChange} placeholder="이메일" />
-          </InputWrap>
-          <InputWrap>
             <InputTitle htmlFor="nickname">닉네임</InputTitle>
             <Input id="nickname" name="nickname" type="text" onChange={onChange} placeholder="닉네임" />
           </InputWrap>
