@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { getMyStudy } from '../API/index';
+import { deleteUser, getMyStudy } from '../API/index';
 import StudyHeader from '../components/StudyHeader';
 import StudyColumnList from '../components/StudyColumnList';
 import { Main, Section, InputWrap, Input, InputTitle, Button, Icon } from '../elements';
@@ -195,10 +195,6 @@ export function Info({ onChange }: PropsType) {
         </div>
         <div>
           <InputWrap>
-            <InputTitle htmlFor="email">이메일</InputTitle>
-            <Input id="email" name="email" type="email" onChange={onChange} placeholder="이메일" />
-          </InputWrap>
-          <InputWrap>
             <InputTitle htmlFor="nickname">닉네임</InputTitle>
             <Input id="nickname" name="nickname" type="text" onChange={onChange} placeholder="닉네임" />
           </InputWrap>
@@ -252,6 +248,17 @@ export function Message({ index }: PType) {
   );
 }
 export function Secession({ onChange }: PropsType) {
+  const history = useHistory();
+  const userDelete = async () => {
+    try {
+      await deleteUser();
+      alert('회원탈퇴 성공!');
+      history.push('/');
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <div>
@@ -260,7 +267,9 @@ export function Secession({ onChange }: PropsType) {
           <InputTitle htmlFor="password">비밀번호</InputTitle>
           <Input id="password" name="password" type="password" onChange={onChange} placeholder="비밀번호" />
         </InputWrap>
-        <Button style={{ backgroundColor: '#51aafe' }}>탈퇴</Button>
+        <Button style={{ backgroundColor: '#51aafe' }} onClick={userDelete}>
+          탈퇴
+        </Button>
       </div>
     </>
   );
