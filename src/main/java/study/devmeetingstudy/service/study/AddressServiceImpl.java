@@ -9,12 +9,13 @@ import study.devmeetingstudy.common.exception.global.error.exception.notfound.Ad
 import study.devmeetingstudy.domain.Address;
 import study.devmeetingstudy.dto.address.AddressReqDto;
 import study.devmeetingstudy.repository.AddressRepository;
+import study.devmeetingstudy.service.interfaces.AddressService;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 @Transactional(readOnly = true)
-public class AddressService {
+public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository addressRepository;
 
@@ -24,7 +25,7 @@ public class AddressService {
         return addressRepository.save(address);
     }
 
-    public Address findAddressById(Long addressId) {
+    public Address getAddress(Long addressId) {
         return addressRepository.findById(addressId).orElseThrow(() -> new AddressNotFoundException("해당 id로 주소를 찾을 수 없습니다"));
     }
 

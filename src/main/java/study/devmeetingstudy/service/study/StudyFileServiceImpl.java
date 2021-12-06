@@ -12,6 +12,7 @@ import study.devmeetingstudy.common.uploader.Uploader;
 import study.devmeetingstudy.domain.study.Study;
 import study.devmeetingstudy.domain.study.StudyFile;
 import study.devmeetingstudy.repository.StudyFileRepository;
+import study.devmeetingstudy.service.interfaces.StudyFileService;
 
 import java.util.List;
 import java.util.Map;
@@ -21,10 +22,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional(readOnly = true)
-public class StudyFileService {
+public class StudyFileServiceImpl implements StudyFileService {
 
     private final StudyFileRepository studyFileRepository;
-    public static final String DEFAULT_IMAGE_URL = "https://dev-meeting-study-bucket.s3.ap-northeast-2.amazonaws.com/subject/";
+
 
     @Transactional
     public StudyFile saveStudyFile(Study study, Map<String, String> uploadFileInfo) {
@@ -32,11 +33,11 @@ public class StudyFileService {
         return studyFileRepository.save(studyFile);
     }
 
-    public List<StudyFile> findStudyFileByStudyId(Long studyId) {
+    public List<StudyFile> getStudyFileByStudyId(Long studyId) {
         return studyFileRepository.findFirstByStudy_Id(studyId);
     }
 
-    public StudyFile findStudyFileById(Long studyFileId) {
+    public StudyFile getStudyFileById(Long studyFileId) {
         return studyFileRepository.findById(studyFileId).orElseThrow(() -> new StudyFileNotFoundException("해당 id로 스터디 파일을 찾을 수 없습니다."));
     }
 

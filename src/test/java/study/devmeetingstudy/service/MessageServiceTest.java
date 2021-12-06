@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import study.devmeetingstudy.common.exception.global.error.exception.notfound.MessageNotFoundException;
 import study.devmeetingstudy.domain.member.Member;
 import study.devmeetingstudy.domain.member.enums.Authority;
@@ -17,6 +18,7 @@ import study.devmeetingstudy.domain.enums.DeletionStatus;
 import study.devmeetingstudy.domain.message.enums.MessageReadStatus;
 import study.devmeetingstudy.dto.message.MessageReqDto;
 import study.devmeetingstudy.repository.message.MessageRepository;
+import study.devmeetingstudy.service.interfaces.MessageService;
 import study.devmeetingstudy.vo.MessageVO;
 
 
@@ -36,7 +38,7 @@ class MessageServiceTest {
     private Member loginMember;
 
     @InjectMocks
-    private MessageService messageService;
+    private MessageServiceImpl messageService;
 
     @Mock
     private MessageRepository messageRepository;
@@ -103,7 +105,7 @@ class MessageServiceTest {
         doReturn(Optional.of(createdMessage)).when(messageRepository).findById(messageId);
 
         //when
-        Message message = messageService.findMessage(messageId);
+        Message message = messageService.getMessage(messageId);
 
         //then
         assertEquals(MessageReadStatus.READ, message.getStatus());
@@ -118,7 +120,7 @@ class MessageServiceTest {
         doReturn(Optional.empty()).when(messageRepository).findById(messageId);
 
         //when
-        MessageNotFoundException messageNotFoundException = assertThrows(MessageNotFoundException.class, () -> messageService.findMessage(messageId));
+        MessageNotFoundException messageNotFoundException = assertThrows(MessageNotFoundException.class, () -> messageService.getMessage(messageId));
         String message = messageNotFoundException.getMessage();
 
         //then
@@ -136,7 +138,7 @@ class MessageServiceTest {
         doReturn(createdMessages).when(messageRepository).findMessagesDesc(loginMember);
 
         //when
-        List<Message> messages = messageService.findMessages(loginMember);
+        List<Message> messages = messageService.getMessages(loginMember);
 
         //then
         assertEquals(5, messages.size());

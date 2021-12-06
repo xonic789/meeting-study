@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import study.devmeetingstudy.common.exception.global.error.ErrorResponse;
 import study.devmeetingstudy.common.exception.global.error.exception.EmailVerifyCodeNotFoundException;
@@ -21,13 +20,12 @@ import study.devmeetingstudy.dto.member.response.MemberSignupResDto;
 import study.devmeetingstudy.dto.token.TokenDto;
 import study.devmeetingstudy.dto.token.request.TokenReqDto;
 import study.devmeetingstudy.dto.token.response.TokenReissueResDto;
-import study.devmeetingstudy.service.AuthService;
-import study.devmeetingstudy.service.EmailService;
+import study.devmeetingstudy.service.interfaces.AuthService;
+import study.devmeetingstudy.service.interfaces.EmailService;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.net.URI;
 
 @Api(tags = "인증", value = "controller")
@@ -36,8 +34,8 @@ import java.net.URI;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthController {
-    private final AuthService authService;
 
+    private final AuthService authService;
     private final EmailService emailService;
 
     @PostMapping("/signup")

@@ -12,7 +12,7 @@ import study.devmeetingstudy.common.exception.global.response.ApiResDto;
 import study.devmeetingstudy.domain.Address;
 import study.devmeetingstudy.dto.address.AddressReqDto;
 import study.devmeetingstudy.dto.address.AddressResDto;
-import study.devmeetingstudy.service.study.AddressService;
+import study.devmeetingstudy.service.interfaces.AddressService;
 
 import java.net.URI;
 
@@ -54,7 +54,7 @@ public class AddressController {
     })
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<ApiResDto<AddressResDto>> getAddress(@PathVariable Long id){
-        Address foundAddress = addressService.findAddressById(id);
+        Address foundAddress = addressService.getAddress(id);
         return ResponseEntity.ok(
                 ApiResDto.<AddressResDto>builder()
                         .message("성공")

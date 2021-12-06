@@ -9,6 +9,7 @@ import study.devmeetingstudy.common.exception.global.error.exception.notfound.Su
 import study.devmeetingstudy.domain.Subject;
 import study.devmeetingstudy.dto.subject.SubjectReqDto;
 import study.devmeetingstudy.repository.SubjectRepository;
+import study.devmeetingstudy.service.interfaces.SubjectService;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @Transactional(readOnly = true)
-public class SubjectService {
+public class SubjectServiceImpl implements SubjectService {
 
     private final SubjectRepository subjectRepository;
 
@@ -26,12 +27,12 @@ public class SubjectService {
         return subjectRepository.save(subject);
     }
 
-    public List<Subject> findSubjects() {
+    public List<Subject> getSubjects() {
         return subjectRepository.findAll();
     }
 
 
-    public Subject findSubjectById(Long subjectId) {
+    public Subject getSubjectById(Long subjectId) {
         return subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new SubjectNotFoundException("해당 id로 스터디 주제를 찾을 수 없습니다."));
     }

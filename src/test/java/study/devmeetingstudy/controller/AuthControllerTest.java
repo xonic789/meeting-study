@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import study.devmeetingstudy.domain.member.Member;
 import study.devmeetingstudy.domain.member.enums.Authority;
 import study.devmeetingstudy.domain.member.enums.MemberStatus;
-import study.devmeetingstudy.service.AuthService;
+import study.devmeetingstudy.service.AuthServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ class AuthControllerTest {
     private PasswordEncoder passwordEncoder;
 
     @MockBean
-    private AuthService authService;
+    private AuthServiceImpl authService;
 
     private List<Member> memberList;
 

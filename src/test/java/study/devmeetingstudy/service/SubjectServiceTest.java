@@ -10,7 +10,8 @@ import study.devmeetingstudy.common.exception.global.error.exception.notfound.Su
 import study.devmeetingstudy.domain.Subject;
 import study.devmeetingstudy.dto.subject.SubjectReqDto;
 import study.devmeetingstudy.repository.SubjectRepository;
-import study.devmeetingstudy.service.study.SubjectService;
+import study.devmeetingstudy.service.interfaces.SubjectService;
+import study.devmeetingstudy.service.study.SubjectServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import static org.mockito.Mockito.doReturn;
 class SubjectServiceTest {
 
     @InjectMocks
-    private SubjectService subjectService;
+    private SubjectServiceImpl subjectService;
 
     @Mock
     private SubjectRepository subjectRepository;
@@ -57,7 +58,7 @@ class SubjectServiceTest {
         doReturn(expectedSubjectList).when(subjectRepository).findAll();
 
         //when
-        List<Subject> subjectList = subjectService.findSubjects();
+        List<Subject> subjectList = subjectService.getSubjects();
         //then
         assertEquals(2, subjectList.size());
     }
@@ -70,7 +71,7 @@ class SubjectServiceTest {
         Subject expectedSubject = Subject.create(new SubjectReqDto(subjectId, "Java"));
         doReturn(Optional.of(expectedSubject)).when(subjectRepository).findById(subjectId);
         //when
-        Subject subject = subjectService.findSubjectById(subjectId);
+        Subject subject = subjectService.getSubjectById(subjectId);
         //then
         assertEquals(expectedSubject, subject);
     }
@@ -82,7 +83,7 @@ class SubjectServiceTest {
         Long subjectId = 1L;
         doReturn(Optional.empty()).when(subjectRepository).findById(subjectId);
         //when
-        SubjectNotFoundException subjectNotFoundException = assertThrows(SubjectNotFoundException.class, () -> subjectService.findSubjectById(subjectId));
+        SubjectNotFoundException subjectNotFoundException = assertThrows(SubjectNotFoundException.class, () -> subjectService.getSubjectById(subjectId));
         String message = subjectNotFoundException.getMessage();
 
         //then

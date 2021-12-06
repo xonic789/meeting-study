@@ -18,8 +18,8 @@ import study.devmeetingstudy.dto.study.StudyDto;
 import study.devmeetingstudy.dto.study.request.StudySaveReqDto;
 import study.devmeetingstudy.dto.study.request.StudySearchCondition;
 import study.devmeetingstudy.dto.study.response.*;
-import study.devmeetingstudy.service.*;
-import study.devmeetingstudy.service.study.*;
+import study.devmeetingstudy.service.interfaces.MemberService;
+import study.devmeetingstudy.service.interfaces.StudyFacadeService;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 public class StudyController {
 
     private final MemberService memberService;
-    private final StudyFacadeServiceImpl studyFacadeService;
+    private final StudyFacadeService studyFacadeService;
 
     @PostMapping
     @ApiOperation(value = "스터디 저장", notes = "온라인일시 link(String), onlineType(String)가 추가되고, 오프라인일시 Address(Object)가 추가됩니다. ")
@@ -51,7 +51,6 @@ public class StudyController {
     public ResponseEntity<ApiResDto<? extends CreatedStudyResDto>> saveStudy(@Valid @ModelAttribute StudySaveReqDto studySaveReqDto,
                                                                              @ApiIgnore @JwtMember MemberResolverDto memberResolverDto) throws IOException {
         log.info("studySaveReqDto = {}", studySaveReqDto);
-        log.info("memberResolverDto = {}", memberResolverDto);
         Member loginMember = memberService.getMemberOne(memberResolverDto.getId());
         CreatedStudyDto createdStudyDto = studyFacadeService.storeStudy(studySaveReqDto, loginMember);
         return getCreatedApiResDto(createdStudyDto);
@@ -88,7 +87,7 @@ public class StudyController {
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<ApiResDto<List<FoundStudiesResDto>>> getStudies(@Valid @ModelAttribute StudySearchCondition studySearchCondition) throws IOException {
         log.info("StudyController.getStudies");
-        List<StudyDto> studies = studyFacadeService.findStudiesBySearchCondition(studySearchCondition);
+        List<StudyDto> studies = studyFacadeService.getStudiesBySearchCondition(studySearchCondition);
         return ResponseEntity.ok(
                 ApiResDto.<List<FoundStudiesResDto>>builder()
                         .message("성공")
@@ -106,7 +105,7 @@ public class StudyController {
     })
     public ResponseEntity<ApiResDto<List<FoundStudiesResDto>>> getMyStudies(@ApiIgnore @JwtMember MemberResolverDto memberResolverDto) {
         log.info("StudyController.getMyStudies");
-        List<StudyDto> studies = studyFacadeService.findStudiesByMemberId(memberResolverDto.getId());
+        List<StudyDto> studies = studyFacadeService.getStudiesByMemberId(memberResolverDto.getId());
         return ResponseEntity.ok(
                 ApiResDto.<List<FoundStudiesResDto>>builder()
                         .message("성공")
@@ -125,7 +124,7 @@ public class StudyController {
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<ApiResDto<FoundStudyResDto>> getStudy(@PathVariable Long studyId) {
         log.info("StudyController.getStudy");
-        StudyDto studyDto = studyFacadeService.findStudyByStudyId(studyId);
+        StudyDto studyDto = studyFacadeService.getStudyByStudyId(studyId);
         return ResponseEntity.ok(
                 ApiResDto.<FoundStudyResDto>builder()
                         .message("성공")

@@ -9,7 +9,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import study.devmeetingstudy.domain.Address;
 import study.devmeetingstudy.dto.address.AddressReqDto;
 import study.devmeetingstudy.repository.AddressRepository;
-import study.devmeetingstudy.service.study.AddressService;
+import study.devmeetingstudy.service.interfaces.AddressService;
+import study.devmeetingstudy.service.study.AddressServiceImpl;
 
 import java.util.Optional;
 
@@ -21,11 +22,12 @@ import static org.mockito.Mockito.doReturn;
 @ExtendWith(MockitoExtension.class)
 class AddressServiceTest {
 
-    @InjectMocks
-    private AddressService addressService;
-
     @Mock
     private AddressRepository addressRepository;
+
+    @InjectMocks
+    private AddressServiceImpl addressService;
+
 
     @DisplayName("주소 저장")
     @Test
@@ -52,7 +54,7 @@ class AddressServiceTest {
         Address expectedAddress = createAddress();
         doReturn(Optional.of(expectedAddress)).when(addressRepository).findById(anyLong());
         //when
-        Address address = addressService.findAddressById(id);
+        Address address = addressService.getAddress(id);
 
         //then
         assertEquals(expectedAddress, address);

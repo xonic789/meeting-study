@@ -17,8 +17,8 @@ import study.devmeetingstudy.common.exception.global.response.ApiResDto;
 import study.devmeetingstudy.domain.member.Member;
 import study.devmeetingstudy.dto.member.request.MemberPatchReqDto;
 import study.devmeetingstudy.dto.member.response.MemberResDto;
-import study.devmeetingstudy.service.AuthService;
-import study.devmeetingstudy.service.MemberService;
+import study.devmeetingstudy.service.interfaces.AuthService;
+import study.devmeetingstudy.service.interfaces.MemberService;
 
 import javax.validation.Valid;
 

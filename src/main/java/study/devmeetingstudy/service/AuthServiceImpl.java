@@ -19,12 +19,13 @@ import study.devmeetingstudy.dto.token.request.TokenReqDto;
 import study.devmeetingstudy.jwt.TokenProvider;
 import study.devmeetingstudy.repository.MemberRepository;
 import study.devmeetingstudy.repository.RefreshTokenRepository;
+import study.devmeetingstudy.service.interfaces.AuthService;
 
 import javax.servlet.http.HttpServletResponse;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthServiceImpl implements AuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;

@@ -9,11 +9,12 @@ import study.devmeetingstudy.domain.study.Offline;
 import study.devmeetingstudy.domain.study.Study;
 import study.devmeetingstudy.dto.study.request.StudyPutReqDto;
 import study.devmeetingstudy.repository.OfflineRepository;
+import study.devmeetingstudy.service.interfaces.OfflineService;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class OfflineService {
+public class OfflineServiceImpl implements OfflineService {
 
     private final OfflineRepository offlineRepository;
 
@@ -22,11 +23,11 @@ public class OfflineService {
         return offlineRepository.save(Offline.create(address, study));
     }
 
-    public Offline findOfflineById(Long offlineId) {
+    public Offline getOfflineById(Long offlineId) {
         return offlineRepository.findById(offlineId).orElseThrow(() -> new OfflineNotFoundException("해당 id로 오프라인을 찾을 수 없습니다."));
     }
 
-    public Offline findOfflineByStudyId(Long studyId) {
+    public Offline getOfflineByStudyId(Long studyId) {
         return offlineRepository.findOfflineByStudy_Id(studyId).orElseThrow(() -> new OfflineNotFoundException("해당 study id로 오프라인을 찾을 수 없습니다."));
     }
 

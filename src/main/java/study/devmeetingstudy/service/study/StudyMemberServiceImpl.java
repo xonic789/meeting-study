@@ -15,6 +15,7 @@ import study.devmeetingstudy.domain.study.StudyMember;
 import study.devmeetingstudy.domain.study.enums.StudyAuth;
 import study.devmeetingstudy.domain.study.enums.StudyMemberStatus;
 import study.devmeetingstudy.repository.StudyMemberRepository;
+import study.devmeetingstudy.service.interfaces.StudyMemberService;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class StudyMemberService {
+public class StudyMemberServiceImpl implements StudyMemberService {
 
     private final StudyMemberRepository studyMemberRepository;
 
@@ -52,15 +53,15 @@ public class StudyMemberService {
         return studyMemberRepository.save(studyMember);
     }
 
-    public List<StudyMember> findStudyMemberByStudyIdAndStudyAuth(Long studyId, StudyAuth studyAuth) {
+    public List<StudyMember> getStudyMemberByStudyIdAndStudyAuth(Long studyId, StudyAuth studyAuth) {
         return studyMemberRepository.findStudyMembersByStudyIdAndStudyAuth(studyId, studyAuth);
     }
 
-    public StudyMember findStudyMemberByStudyIdAndAuthLeader(Long studyId) {
+    public StudyMember getStudyLeaderByStudyId(Long studyId) {
         return studyMemberRepository.findStudyMemberByStudyIdAndAuthLeader(studyId).orElseThrow(() -> new StudyMemberNotFoundException("해당 study id로 스터디 리더를 찾을 수 없습니다."));
     }
 
-    public List<StudyMember> findStudyMembersByStudyId(Long studyId) {
+    public List<StudyMember> getStudyMembersByStudyId(Long studyId) {
         return studyMemberRepository.findStudyMembersByStudyIdAndStatusJOIN(studyId);
     }
 
@@ -82,7 +83,7 @@ public class StudyMemberService {
         return studyMemberRepository.findStudyMemberByStudyIdAndMemberId(studyId, memberId).filter(studyMember -> studyMember.getStudyMemberStatus() != StudyMemberStatus.JOIN).isPresent();
     }
 
-    public StudyMember findStudyMemberById(Long studyMemberId) {
+    public StudyMember getStudyMemberById(Long studyMemberId) {
         return studyMemberRepository.findStudyMemberByIdAndStatusJOIN(studyMemberId).orElseThrow(() -> new StudyMemberNotFoundException("해당 study member id로 스터디 멤버를 찾을 수 없습니다."));
     }
 
@@ -92,7 +93,7 @@ public class StudyMemberService {
 
     @Transactional
     public void deleteStudyMember(Long studyMemberId, MemberResolverDto memberResolverDto) {
-        StudyMember studyMember = findStudyMemberById(studyMemberId);
+        StudyMember studyMember = getStudyMemberById(studyMemberId);
         if (studyMember.isStudyAuthLeader()) {
             checkStudyLeaderOwner(memberResolverDto, studyMember);
             StudyMember.changeStudyMemberStatus(studyMember, StudyMemberStatus.OUT);
@@ -115,7 +116,7 @@ public class StudyMemberService {
         return studyMember.getMember().getId().equals(memberResolverDto.getId());
     }
 
-    public List<StudyMember> findStudyMembersByMemberId(Long memberId) {
+    public List<StudyMember> getStudyMembersByMemberId(Long memberId) {
         return studyMemberRepository.findStudyMembersByMemberId(memberId);
     }
 }
