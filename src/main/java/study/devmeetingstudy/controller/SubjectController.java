@@ -11,7 +11,7 @@ import study.devmeetingstudy.common.exception.global.response.ApiResDto;
 import study.devmeetingstudy.domain.Subject;
 import study.devmeetingstudy.dto.subject.SubjectReqDto;
 import study.devmeetingstudy.dto.subject.SubjectResDto;
-import study.devmeetingstudy.service.study.SubjectService;
+import study.devmeetingstudy.service.interfaces.SubjectService;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -42,7 +42,7 @@ public class SubjectController {
 
     @GetMapping
     public ResponseEntity<ApiResDto<List<SubjectResDto>>> getSubjects(){
-        List<Subject> subjects = subjectService.findSubjects();
+        List<Subject> subjects = subjectService.getSubjects();
         return ResponseEntity.ok(
                     ApiResDto.<List<SubjectResDto>>builder()
                             .message("성공")

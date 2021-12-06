@@ -4,7 +4,7 @@ import study.devmeetingstudy.domain.Email;
 
 import java.util.Optional;
 
-public interface EmailCustomRepository<T> {
+public interface EmailRepositoryCustom {
 
     Optional<Email> findByEmail(String email);
 }

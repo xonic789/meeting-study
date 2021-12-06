@@ -15,10 +15,10 @@ import study.devmeetingstudy.domain.member.Member;
 import study.devmeetingstudy.domain.message.Message;
 import study.devmeetingstudy.dto.message.MessageReqDto;
 import study.devmeetingstudy.dto.message.MessageResDto;
-import study.devmeetingstudy.service.AuthService;
+import study.devmeetingstudy.service.interfaces.AuthService;
+import study.devmeetingstudy.service.interfaces.MemberService;
+import study.devmeetingstudy.service.interfaces.MessageService;
 import study.devmeetingstudy.vo.MessageVO;
-import study.devmeetingstudy.service.MemberService;
-import study.devmeetingstudy.service.MessageService;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -69,7 +69,7 @@ public class MessageController {
     @ResponseStatus(value = HttpStatus.OK)
     public ResponseEntity<ApiResDto<List<MessageResDto>>> getMessages(@ApiIgnore @JwtMember MemberResolverDto MemberResolverDto){
         Member loginMember = memberService.getMemberOne(MemberResolverDto.getId());
-        List<Message> messages = messageService.findMessages(loginMember);
+        List<Message> messages = messageService.getMessages(loginMember);
         return ResponseEntity.ok(
                 ApiResDto.<List<MessageResDto>>builder()
                         .message("성공")
@@ -95,7 +95,7 @@ public class MessageController {
     public ResponseEntity<ApiResDto<MessageResDto>> getMessage(@ApiIgnore @JwtMember MemberResolverDto memberResolverDto,
                                                                @PathVariable Long messageId){
         Member loginMember = memberService.getMemberOne(memberResolverDto.getId());
-        Message message = messageService.findMessage(messageId);
+        Message message = messageService.getMessage(messageId);
         authService.checkUserInfo(message.getMember().getId(), memberResolverDto);
         return ResponseEntity.ok(
                 ApiResDto.<MessageResDto>builder()
@@ -117,7 +117,7 @@ public class MessageController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteMessage(@ApiIgnore @JwtMember MemberResolverDto memberResolverDto,
                                               @PathVariable Long messageId){
-        Message message = messageService.findMessage(messageId);
+        Message message = messageService.getMessage(messageId);
         authService.checkUserInfo(message.getMember().getId(), memberResolverDto);
         messageService.deleteMessage(message);
         return ResponseEntity.noContent().build();

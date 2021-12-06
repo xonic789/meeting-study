@@ -8,7 +8,7 @@ import javax.persistence.PersistenceContext;
 import java.util.Optional;
 
 @Repository
-public class EmailRepositoryImpl implements EmailCustomRepository {
+public class EmailRepositoryImpl implements EmailRepositoryCustom {
 
     @PersistenceContext
     private EntityManager entityManager;

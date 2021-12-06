@@ -12,9 +12,12 @@ import study.devmeetingstudy.annotation.dto.MemberResolverDto;
 import study.devmeetingstudy.common.exception.global.response.ApiResDto;
 import study.devmeetingstudy.domain.study.StudyMember;
 import study.devmeetingstudy.dto.study.response.StudyMemberResDto;
-import study.devmeetingstudy.service.MemberService;
-import study.devmeetingstudy.service.study.StudyMemberService;
-import study.devmeetingstudy.service.study.StudyService;
+import study.devmeetingstudy.service.MemberServiceImpl;
+import study.devmeetingstudy.service.interfaces.MemberService;
+import study.devmeetingstudy.service.interfaces.StudyMemberService;
+import study.devmeetingstudy.service.interfaces.StudyService;
+import study.devmeetingstudy.service.study.StudyMemberServiceImpl;
+import study.devmeetingstudy.service.study.StudyServiceImpl;
 
 import java.net.URI;
 import java.util.List;
@@ -44,7 +47,7 @@ public class StudyMemberController {
                                                                               @ApiIgnore @JwtMember MemberResolverDto memberResolverDto) {
         log.info("StudyMemberController.getStudyMembers");
         studyMemberService.authenticateStudyMember(studyId, memberResolverDto);
-        List<StudyMember> studyMembers = studyMemberService.findStudyMembersByStudyId(studyId);
+        List<StudyMember> studyMembers = studyMemberService.getStudyMembersByStudyId(studyId);
         return ResponseEntity.ok(
                 ApiResDto.<List<StudyMemberResDto>>builder()
                         .message("성공")
@@ -67,7 +70,7 @@ public class StudyMemberController {
                                                                        @PathVariable Long studyMemberId,
                                                                        @ApiIgnore @JwtMember MemberResolverDto memberResolverDto) {
         studyMemberService.authenticateStudyMember(studyId, memberResolverDto);
-        StudyMember studyMember = studyMemberService.findStudyMemberById(studyMemberId);
+        StudyMember studyMember = studyMemberService.getStudyMemberById(studyMemberId);
         return ResponseEntity.ok(
                 ApiResDto.<StudyMemberResDto>builder()
                         .message("성공")
@@ -87,7 +90,7 @@ public class StudyMemberController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<ApiResDto<StudyMemberResDto>> applyStudyMember(@PathVariable Long studyId,
                                                                          @ApiIgnore @JwtMember MemberResolverDto memberResolverDto) {
-        StudyMember studyMember = studyMemberService.saveStudyMember(memberService.getMemberOne(memberResolverDto.getId()), studyService.findStudyById(studyId));
+        StudyMember studyMember = studyMemberService.saveStudyMember(memberService.getMemberOne(memberResolverDto.getId()), studyService.getStudyById(studyId));
         return ResponseEntity.created(URI.create("/api/studies" + studyId + "/study-members" + studyMember.getId()))
                 .body(
                         ApiResDto.<StudyMemberResDto>builder()
