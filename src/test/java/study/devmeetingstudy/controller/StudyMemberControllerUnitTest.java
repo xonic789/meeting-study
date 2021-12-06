@@ -36,9 +36,12 @@ import study.devmeetingstudy.domain.study.enums.StudyType;
 import study.devmeetingstudy.dto.token.TokenDto;
 import study.devmeetingstudy.jwt.TokenProvider;
 import study.devmeetingstudy.repository.MemberRepository;
-import study.devmeetingstudy.service.MemberService;
-import study.devmeetingstudy.service.study.StudyMemberService;
-import study.devmeetingstudy.service.study.StudyService;
+import study.devmeetingstudy.service.MemberServiceImpl;
+import study.devmeetingstudy.service.interfaces.MemberService;
+import study.devmeetingstudy.service.interfaces.StudyMemberService;
+import study.devmeetingstudy.service.interfaces.StudyService;
+import study.devmeetingstudy.service.study.StudyMemberServiceImpl;
+import study.devmeetingstudy.service.study.StudyServiceImpl;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -132,7 +135,7 @@ class StudyMemberControllerUnitTest {
 
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
         doNothing().when(studyMemberService).authenticateStudyMember(anyLong(), any(MemberResolverDto.class));
-        doReturn(sortedStudyMembers).when(studyMemberService).findStudyMembersByStudyId(anyLong());
+        doReturn(sortedStudyMembers).when(studyMemberService).getStudyMembersByStudyId(anyLong());
 
 
         //when
@@ -224,7 +227,7 @@ class StudyMemberControllerUnitTest {
 
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
         doNothing().when(studyMemberService).authenticateStudyMember(anyLong(), any(MemberResolverDto.class));
-        doReturn(studyLeader).when(studyMemberService).findStudyMemberById(anyLong());
+        doReturn(studyLeader).when(studyMemberService).getStudyMemberById(anyLong());
 
 
         //when
@@ -247,7 +250,7 @@ class StudyMemberControllerUnitTest {
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
         doReturn(studyMember).when(studyMemberService).saveStudyMember(any(Member.class), any(Study.class));
         doReturn(loginMember).when(memberService).getMemberOne(anyLong());
-        doReturn(study).when(studyService).findStudyById(anyLong());
+        doReturn(study).when(studyService).getStudyById(anyLong());
 
         //when
         final ResultActions resultActions = mockMvc.perform(

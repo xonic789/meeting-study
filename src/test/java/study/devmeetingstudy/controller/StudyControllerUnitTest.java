@@ -53,6 +53,9 @@ import study.devmeetingstudy.dto.token.TokenDto;
 import study.devmeetingstudy.jwt.TokenProvider;
 import study.devmeetingstudy.repository.MemberRepository;
 import study.devmeetingstudy.service.*;
+import study.devmeetingstudy.service.interfaces.MemberService;
+import study.devmeetingstudy.service.interfaces.StudyFacadeService;
+import study.devmeetingstudy.service.interfaces.StudyService;
 import study.devmeetingstudy.service.study.*;
 
 
@@ -73,7 +76,7 @@ class StudyControllerUnitTest {
     private StudyController studyController;
 
     @Mock
-    private StudyFacadeServiceImpl studyFacadeService;
+    private StudyFacadeService studyFacadeService;
 
     @Mock
     private MemberRepository memberRepository;
@@ -318,7 +321,7 @@ class StudyControllerUnitTest {
         }
 
         List<StudyDto> filterStudyDtos = studyDtos.stream().filter(studyDto -> studyDto.getDtype() == StudyInstanceType.ONLINE).collect(Collectors.toList());
-        doReturn(filterStudyDtos).when(studyFacadeService).findStudiesBySearchCondition(any(StudySearchCondition.class));
+        doReturn(filterStudyDtos).when(studyFacadeService).getStudiesBySearchCondition(any(StudySearchCondition.class));
 
 
         //when
@@ -389,7 +392,7 @@ class StudyControllerUnitTest {
         onlineDto.setFiles(studyFiles);
         onlineDto.setStudyMembers(studyMembers);
 
-        doReturn(onlineDto).when(studyFacadeService).findStudyByStudyId(anyLong());
+        doReturn(onlineDto).when(studyFacadeService).getStudyByStudyId(anyLong());
 
         //when
         final ResultActions resultActions = mockMvc.perform(

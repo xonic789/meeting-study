@@ -9,12 +9,13 @@ import study.devmeetingstudy.domain.member.Member;
 import study.devmeetingstudy.domain.member.enums.MemberStatus;
 import study.devmeetingstudy.dto.member.request.MemberPatchReqDto;
 import study.devmeetingstudy.repository.MemberRepository;
+import study.devmeetingstudy.service.interfaces.MemberService;
 import study.devmeetingstudy.util.SecurityUtil;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class MemberService {
+public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
 

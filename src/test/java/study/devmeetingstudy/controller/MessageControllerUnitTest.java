@@ -33,13 +33,16 @@ import study.devmeetingstudy.domain.message.Message;
 import study.devmeetingstudy.domain.enums.DeletionStatus;
 import study.devmeetingstudy.domain.message.enums.MessageReadStatus;
 import study.devmeetingstudy.dto.message.MessageReqDto;
-import study.devmeetingstudy.service.AuthService;
+import study.devmeetingstudy.service.AuthServiceImpl;
+import study.devmeetingstudy.service.interfaces.AuthService;
+import study.devmeetingstudy.service.interfaces.MemberService;
+import study.devmeetingstudy.service.interfaces.MessageService;
 import study.devmeetingstudy.vo.MessageVO;
 import study.devmeetingstudy.dto.token.TokenDto;
 import study.devmeetingstudy.jwt.TokenProvider;
 import study.devmeetingstudy.repository.MemberRepository;
-import study.devmeetingstudy.service.MemberService;
-import study.devmeetingstudy.service.MessageService;
+import study.devmeetingstudy.service.MemberServiceImpl;
+import study.devmeetingstudy.service.MessageServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -196,7 +199,7 @@ class MessageControllerUnitTest {
         TokenDto tokenDto = tokenProvider.generateTokenDto(token);
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
         doReturn(member).doReturn(loginMember).doReturn(loginMember).doReturn(loginMember).doReturn(loginMember).doReturn(loginMember).when(memberService).getMemberOne(any(Long.class));
-        doReturn(messages).when(messageService).findMessages(any(Member.class));
+        doReturn(messages).when(messageService).getMessages(any(Member.class));
 
         //when
         // 요청 리퀘스트 폼 생성
@@ -229,7 +232,7 @@ class MessageControllerUnitTest {
         TokenDto tokenDto = tokenProvider.generateTokenDto(token);
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
         doReturn(loginMember).doReturn(member).when(memberService).getMemberOne(anyLong());
-        doReturn(readMessage).when(messageService).findMessage(anyLong());
+        doReturn(readMessage).when(messageService).getMessage(anyLong());
         doNothing().when(authService).checkUserInfo(anyLong(), any(MemberResolverDto.class));
 
         //when
@@ -265,7 +268,7 @@ class MessageControllerUnitTest {
 
         doReturn(loginMember).doReturn(member).when(memberService).getMemberOne(anyLong());
 
-        doReturn(readMessage).when(messageService).findMessage(anyLong());
+        doReturn(readMessage).when(messageService).getMessage(anyLong());
 
         doThrow(new UserInfoMismatchException("유저 정보가 일치하지 않습니다.")).when(authService).checkUserInfo(anyLong(), any(MemberResolverDto.class));
 
@@ -295,7 +298,7 @@ class MessageControllerUnitTest {
         // loginMember 기반으로 token 생성
         TokenDto tokenDto = tokenProvider.generateTokenDto(token);
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
-        doReturn(createdMessage).when(messageService).findMessage(anyLong());
+        doReturn(createdMessage).when(messageService).getMessage(anyLong());
         doNothing().when(authService).checkUserInfo(anyLong(), any(MemberResolverDto.class));
         doNothing().when(messageService).deleteMessage(any(Message.class));
 
@@ -324,7 +327,7 @@ class MessageControllerUnitTest {
         TokenDto tokenDto = tokenProvider.generateTokenDto(token);
         // sender 입장에서 확인한다.
         doReturn(Optional.of(loginMember)).when(memberRepository).findById(anyLong());
-        doReturn(createdMessage).when(messageService).findMessage(anyLong());
+        doReturn(createdMessage).when(messageService).getMessage(anyLong());
         doThrow(new UserInfoMismatchException("유저 정보가 일치하지 않습니다.")).when(authService).checkUserInfo(anyLong(), any(MemberResolverDto.class));
 
         //when

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import study.devmeetingstudy.domain.Email;
 import study.devmeetingstudy.dto.email.EmailVerifyCodeReqDto;
 import study.devmeetingstudy.repository.email.EmailRepository;
+import study.devmeetingstudy.service.interfaces.EmailService;
 
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
@@ -17,7 +18,7 @@ import java.util.Random;
 
 @RequiredArgsConstructor
 @Service
-public class EmailService {
+public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender emailSender;
     private final JavaMailSenderImpl javaMailSender;

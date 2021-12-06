@@ -9,6 +9,7 @@ import study.devmeetingstudy.domain.message.Message;
 import study.devmeetingstudy.domain.member.Member;
 import study.devmeetingstudy.domain.enums.DeletionStatus;
 import study.devmeetingstudy.domain.message.enums.MessageReadStatus;
+import study.devmeetingstudy.service.interfaces.MessageService;
 import study.devmeetingstudy.vo.MessageVO;
 import study.devmeetingstudy.repository.message.MessageRepository;
 
@@ -18,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Slf4j
-public class MessageService {
+public class MessageServiceImpl implements MessageService {
     private final MessageRepository messageRepository;
     /**
      * 회원 인증 정보
@@ -31,7 +32,7 @@ public class MessageService {
     }
 
     @Transactional
-    public Message findMessage(Long id){
+    public Message getMessage(Long id){
         Message foundMessage = messageRepository.findById(id)
                 .orElseThrow(() -> new MessageNotFoundException("해당 id로 메시지를 찾을 수 없습니다."));
 
@@ -47,7 +48,7 @@ public class MessageService {
         return MessageReadStatus.NOT_READ == messageReadStatus;
     }
 
-    public List<Message> findMessages(Member member){
+    public List<Message> getMessages(Member member){
         return messageRepository.findMessagesDesc(member);
     }
 

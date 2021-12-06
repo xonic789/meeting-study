@@ -30,7 +30,8 @@ import study.devmeetingstudy.dto.address.AddressReqDto;
 import study.devmeetingstudy.dto.token.TokenDto;
 import study.devmeetingstudy.jwt.TokenProvider;
 import study.devmeetingstudy.repository.MemberRepository;
-import study.devmeetingstudy.service.study.AddressService;
+import study.devmeetingstudy.service.interfaces.AddressService;
+import study.devmeetingstudy.service.study.AddressServiceImpl;
 
 import java.util.Collections;
 
@@ -137,7 +138,7 @@ class AddressControllerUnitTest {
 
         AddressReqDto addressReqDto = new AddressReqDto("경기도", "광주시", "오포읍");
         Address expectedAddress = createAddress(addressReqDto);
-        doReturn(expectedAddress).when(addressService).findAddressById(any(Long.class));
+        doReturn(expectedAddress).when(addressService).getAddress(any(Long.class));
 
         //when
         ResultActions resultActions = mockMvc.perform(

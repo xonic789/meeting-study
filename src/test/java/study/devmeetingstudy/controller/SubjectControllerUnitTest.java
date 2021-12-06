@@ -31,7 +31,8 @@ import study.devmeetingstudy.dto.subject.SubjectReqDto;
 import study.devmeetingstudy.dto.token.TokenDto;
 import study.devmeetingstudy.jwt.TokenProvider;
 import study.devmeetingstudy.repository.MemberRepository;
-import study.devmeetingstudy.service.study.SubjectService;
+import study.devmeetingstudy.service.interfaces.SubjectService;
+import study.devmeetingstudy.service.study.SubjectServiceImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -146,7 +147,7 @@ class SubjectControllerUnitTest {
             subjectList.add(createSubject((long) i+1, subjects[i]));
         }
 
-        doReturn(subjectList).when(subjectService).findSubjects();
+        doReturn(subjectList).when(subjectService).getSubjects();
 
         //when
         final ResultActions resultActions = mockMvc.perform(

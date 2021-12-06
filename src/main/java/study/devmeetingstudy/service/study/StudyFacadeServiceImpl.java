@@ -1,7 +1,6 @@
 package study.devmeetingstudy.service.study;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,13 +15,13 @@ import study.devmeetingstudy.dto.study.CreatedStudyDto;
 import study.devmeetingstudy.dto.study.StudyDto;
 import study.devmeetingstudy.dto.study.request.StudyPutReqDto;
 import study.devmeetingstudy.dto.study.request.StudySearchCondition;
-import study.devmeetingstudy.service.AuthService;
+import study.devmeetingstudy.service.AuthServiceImpl;
+import study.devmeetingstudy.service.interfaces.StudyFacadeService;
 import study.devmeetingstudy.vo.StudyReplaceVO;
 import study.devmeetingstudy.vo.StudySaveVO;
 import study.devmeetingstudy.dto.study.request.StudySaveReqDto;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,20 +31,20 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class StudyFacadeServiceImpl implements StudyFacadeService {
 
-    private final StudyService studyService;
-    private final AddressService addressService;
-    private final OfflineService offlineService;
-    private final OnlineService onlineService;
-    private final StudyFileService studyFileService;
-    private final StudyMemberService studyMemberService;
-    private final SubjectService subjectService;
+    private final StudyServiceImpl studyService;
+    private final AddressServiceImpl addressService;
+    private final OfflineServiceImpl offlineService;
+    private final OnlineServiceImpl onlineService;
+    private final StudyFileServiceImpl studyFileService;
+    private final StudyMemberServiceImpl studyMemberService;
+    private final SubjectServiceImpl subjectService;
     private final Uploader uploader;
-    private final AuthService authService;
+    private final AuthServiceImpl authService;
 
     // TODO 파일이 비어있을시 기본 이미지 추가.
     @Transactional
     public CreatedStudyDto storeStudy(StudySaveReqDto studySaveReqDto, Member loginMember) throws IOException {
-        Subject foundSubject = subjectService.findSubjectById(studySaveReqDto.getSubjectId());
+        Subject foundSubject = subjectService.getSubjectById(studySaveReqDto.getSubjectId());
         Map<String, String> uploadFileInfo =
                 isFileExists(studySaveReqDto.getFile()) ?
                         uploader.upload(studySaveReqDto.getFile(), DomainType.STUDY) : studyFileService.getDefaultFile(foundSubject.getName());
@@ -56,34 +55,34 @@ public class StudyFacadeServiceImpl implements StudyFacadeService {
                 .study(createdStudy)
                 .studyFile(studyFile)
                 .online(createdStudy.isDtypeOnline() ? onlineService.saveOnline(studySaveReqDto, createdStudy) : null)
-                .offline(!createdStudy.isDtypeOnline() ? offlineService.saveOffline(addressService.findAddressById(studySaveReqDto.getAddressId()), createdStudy) : null)
+                .offline(!createdStudy.isDtypeOnline() ? offlineService.saveOffline(addressService.getAddress(studySaveReqDto.getAddressId()), createdStudy) : null)
                 .studyMember(studyMember)
                 .build();
     }
 
-    public List<StudyDto> findStudiesBySearchCondition(StudySearchCondition studySearchCondition) {
-        List<Study> studies = studyService.findStudiesByStudySearchCondition(studySearchCondition);
+    public List<StudyDto> getStudiesBySearchCondition(StudySearchCondition studySearchCondition) {
+        List<Study> studies = studyService.getStudiesByStudySearchCondition(studySearchCondition);
         return studies.stream().map(
                 study -> StudyDto.of(study,
-                                studyMemberService.findStudyMemberByStudyIdAndStudyAuth(study.getId(), StudyAuth.LEADER),
-                                studyFileService.findStudyFileByStudyId(study.getId()))
+                                studyMemberService.getStudyMemberByStudyIdAndStudyAuth(study.getId(), StudyAuth.LEADER),
+                                studyFileService.getStudyFileByStudyId(study.getId()))
         ).collect(Collectors.toList());
     }
 
-    public StudyDto findStudyByStudyId(Long studyId) {
-        Study study = studyService.findStudyFetchJoinById(studyId);
+    public StudyDto getStudyByStudyId(Long studyId) {
+        Study study = studyService.getStudyFetchJoinById(studyId);
         return StudyDto.of(study,
-                studyMemberService.findStudyMembersByStudyId(studyId),
-                studyFileService.findStudyFileByStudyId(study.getId()));
+                studyMemberService.getStudyMembersByStudyId(studyId),
+                studyFileService.getStudyFileByStudyId(study.getId()));
     }
 
     @Transactional
     public CreatedStudyDto replaceStudy(StudyPutReqDto studyPutReqDto, MemberResolverDto memberResolverDto) throws IOException {
         Long studyId = studyPutReqDto.getStudyId();
-        Study foundStudy = studyService.findStudyById(studyId);
+        Study foundStudy = studyService.getStudyById(studyId);
         // 에러 발생 Leader 존재하지 않음.
         StudyMember studyMember = checkStudyMemberLeader(studyId, memberResolverDto);
-        Subject foundSubject = subjectService.findSubjectById(studyPutReqDto.getSubjectId());
+        Subject foundSubject = subjectService.getSubjectById(studyPutReqDto.getSubjectId());
         Object onlineOrOffline = SyncOrReplaceOnlineOrOffline(studyPutReqDto, foundStudy);
 
         return CreatedStudyDto.builder()
@@ -96,7 +95,7 @@ public class StudyFacadeServiceImpl implements StudyFacadeService {
     }
 
     private StudyMember checkStudyMemberLeader(Long studyId, MemberResolverDto memberResolverDto) {
-        StudyMember studyMember = studyMemberService.findStudyMemberByStudyIdAndAuthLeader(studyId);
+        StudyMember studyMember = studyMemberService.getStudyLeaderByStudyId(studyId);
         authService.checkUserInfo(studyMember.getMember().getId(), memberResolverDto);
         return studyMember;
     }
@@ -117,32 +116,32 @@ public class StudyFacadeServiceImpl implements StudyFacadeService {
 
     private Online deleteOfflineAndSaveOnline(StudyPutReqDto studyPutReqDto, Study foundStudy) {
         foundStudy.removeOffline();
-        offlineService.deleteOffline(offlineService.findOfflineByStudyId(studyPutReqDto.getStudyId()));
+        offlineService.deleteOffline(offlineService.getOfflineByStudyId(studyPutReqDto.getStudyId()));
         return onlineService.saveOnline(StudySaveReqDto.of(studyPutReqDto), foundStudy);
     }
 
     private Offline deleteOnlineAndSaveOffline(StudyPutReqDto studyPutReqDto, Study foundStudy) {
         foundStudy.removeOnline();
-        onlineService.deleteOnline(onlineService.findOnlineByStudyId(studyPutReqDto.getStudyId()));
-        return offlineService.saveOffline(addressService.findAddressById(studyPutReqDto.getAddressId()), foundStudy);
+        onlineService.deleteOnline(onlineService.getOnlineByStudyId(studyPutReqDto.getStudyId()));
+        return offlineService.saveOffline(addressService.getAddress(studyPutReqDto.getAddressId()), foundStudy);
     }
 
     private Object replaceOnlineOrOffline(StudyPutReqDto studyPutReqDto) {
         if (studyPutReqDto.getDtype().isOnline()) {
-            return onlineService.replaceOnline(studyPutReqDto, onlineService.findOnlineById(studyPutReqDto.getOnlineId()));
+            return onlineService.replaceOnline(studyPutReqDto, onlineService.getOnlineById(studyPutReqDto.getOnlineId()));
         }
         return offlineService.replaceOffline(
-                addressService.findAddressById(studyPutReqDto.getAddressId()),
-                offlineService.findOfflineById(studyPutReqDto.getOfflineId()));
+                addressService.getAddress(studyPutReqDto.getAddressId()),
+                offlineService.getOfflineById(studyPutReqDto.getOfflineId()));
     }
 
     private StudyFile replaceStudyFile(StudyPutReqDto studyPutReqDto) throws IOException {
         if (isFileExists(studyPutReqDto.getFile())) {
             Map<String, String> upload = uploader.upload(studyPutReqDto.getFile(), DomainType.STUDY);
-            StudyFile studyFile = studyFileService.findStudyFileById(studyPutReqDto.getStudyFileId());
+            StudyFile studyFile = studyFileService.getStudyFileById(studyPutReqDto.getStudyFileId());
             return studyFileService.replaceStudyFile(upload, studyFile);
         }
-        return studyFileService.findStudyFileById(studyPutReqDto.getStudyFileId());
+        return studyFileService.getStudyFileById(studyPutReqDto.getStudyFileId());
     }   
 
     private boolean isFileExists(MultipartFile multipartFile) {
@@ -151,18 +150,18 @@ public class StudyFacadeServiceImpl implements StudyFacadeService {
 
     @Transactional
     public void deleteStudy(Long studyId, MemberResolverDto memberResolverDto) {
-        Study foundStudy = studyService.findStudyById(studyId);
+        Study foundStudy = studyService.getStudyById(studyId);
         checkStudyMemberLeader(studyId, memberResolverDto);
         studyService.deleteStudyById(foundStudy);
     }
 
-    public List<StudyDto> findStudiesByMemberId(Long memberId) {
-        List<StudyMember> studyMembers = studyMemberService.findStudyMembersByMemberId(memberId);
+    public List<StudyDto> getStudiesByMemberId(Long memberId) {
+        List<StudyMember> studyMembers = studyMemberService.getStudyMembersByMemberId(memberId);
         return studyMembers.stream().map(studyMember ->
             StudyDto.of(
                     studyMember.getStudy(),
-                    studyMemberService.findStudyMemberByStudyIdAndStudyAuth(studyMember.getStudy().getId(), StudyAuth.LEADER),
-                    studyFileService.findStudyFileByStudyId(studyMember.getStudy().getId()))
+                    studyMemberService.getStudyMemberByStudyIdAndStudyAuth(studyMember.getStudy().getId(), StudyAuth.LEADER),
+                    studyFileService.getStudyFileByStudyId(studyMember.getStudy().getId()))
         ).collect(Collectors.toList());
     }
 }
