@@ -1,6 +1,7 @@
 package study.devmeetingstudy.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import java.util.Random;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class EmailServiceImpl implements EmailService {
 
@@ -26,9 +28,9 @@ public class EmailServiceImpl implements EmailService {
 
     private MimeMessage createMessage(String to)throws Exception{
         String key = createKey();
-        System.out.println("보내는 대상 : "+ to);
-        System.out.println("인증 번호 : " + key);
-
+        log.info("보내는 대상 : {}", to);
+        log.info("인증 번호 : {}", key);
+        log.info("id : {} password : {}", javaMailSender.getUsername(), javaMailSender.getPassword());
         MimeMessage  message = emailSender.createMimeMessage();
 
         String code = createCode(createKey());
