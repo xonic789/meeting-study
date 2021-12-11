@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Component
 @RequiredArgsConstructor
 @Slf4j
 public class S3Uploader implements Uploader{
@@ -85,47 +84,3 @@ public class S3Uploader implements Uploader{
     }
 
 }
-
-/** TODO : 람다식으로 multiple upload 구현해보기.
- * public class PropagateExceptionsSample {
- *     // a simplified version of Throwables#propagate
- *     public static RuntimeException runtime(Throwable e) {
- *         if (e instanceof RuntimeException) {
- *             return (RuntimeException)e;
- *         }
- *
- *         return new RuntimeException(e);
- *     }
- *
- *     // this is a new one, n/a in public libs
- *     // Callable just suits as a functional interface in JDK throwing Exception
- *     public static <V> V propagate(Callable<V> callable){
- *         try {
- *             return callable.call();
- *         } catch (Exception e) {
- *             throw runtime(e);
- *         }
- *     }
- *
- *     public static void main(String[] args) {
- *         class Account{
- *             String name;
- *             Account(String name) { this.name = name;}
- *
- *             public boolean isActive() throws IOException {
- *                 return name.startsWith("a");
- *             }
- *         }
- *
- *
- *         List<Account> accounts = new ArrayList<>(Arrays.asList(new Account("andrey"), new Account("angela"), new Account("pamela")));
- *
- *         Stream<Account> s = accounts.stream();
- *
- *         s
- *           .filter(a -> propagate(a::isActive))
- *           .map(a -> a.name)
- *           .forEach(System.out::println);
- *     }
- * }
- */
