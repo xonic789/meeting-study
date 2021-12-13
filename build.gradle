@@ -53,7 +53,7 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
 
     // 클라우드 관련 모듈
-    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
+//    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.0.1.RELEASE'
 
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2',
             // Uncomment the next line if you want to use RSASSA-PSS (PS256, PS384, PS512) algorithms:
