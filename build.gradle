@@ -30,16 +30,16 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     // web
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    // thymeleaf 현재는 사용하지 않음.
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     // p6spy, jpa query string 드러남
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.6'
     // ObjectMapper 이용
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+    // 이미지 요청 컨트롤러 캐싱 하기 위해
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
 
+    // querydsl
     implementation 'com.querydsl:querydsl-jpa'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
 
     annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'
@@ -47,6 +47,7 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client' // MariaDB
 
+    // swagger
     implementation 'io.springfox:springfox-swagger-ui:2.9.2'
     implementation 'io.springfox:springfox-swagger2:2.9.2'
     // jwt 관련 의존성 https://github.com/jwtk/jjwt
