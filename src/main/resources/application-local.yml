@@ -15,6 +15,9 @@ spring:
   logging:
     level:
       org.hibernate.SQL: debug
+  mvc:
+    static-path-pattern: /static/**
+
   #      org.hibernate.type: trace
 
   # HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용해야 한다.

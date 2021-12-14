@@ -1,8 +1,8 @@
 package study.devmeetingstudy.common.uploader;
 
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.PutObjectRequest;
+//import com.amazonaws.services.s3.AmazonS3Client;
+//import com.amazonaws.services.s3.model.CannedAccessControlList;
+//import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class S3Uploader implements Uploader{
 
-    private final AmazonS3Client amazonS3Client;
+//    private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -60,7 +60,7 @@ public class S3Uploader implements Uploader{
         return getFileInfo(uploadFile.getName(), uploadImageUrl);
     }
 
-    public Map<String, String> getFileInfo(String originalFileName, String uploadImageUrl) {
+    private Map<String, String> getFileInfo(String originalFileName, String uploadImageUrl) {
         Map<String, String> fileInfo = new ConcurrentHashMap<>();
         fileInfo.put(FILE_NAME, originalFileName);
         fileInfo.put(UPLOAD_URL, uploadImageUrl);
@@ -68,11 +68,12 @@ public class S3Uploader implements Uploader{
     }
 
     private String putS3(File uploadFile, String fileName) {
-        amazonS3Client.putObject(
-                new PutObjectRequest(bucket, fileName, uploadFile)
-                        .withCannedAcl(CannedAccessControlList.PublicRead)
-        );
-        return amazonS3Client.getUrl(bucket, fileName).toString();
+//        amazonS3Client.putObject(
+//                new PutObjectRequest(bucket, fileName, uploadFile)
+//                        .withCannedAcl(CannedAccessControlList.PublicRead)
+//        );
+//        return amazonS3Client.getUrl(bucket, fileName).toString();
+        return null;
     }
 
     private void removeNewFile(File targetFile) {
@@ -80,7 +81,7 @@ public class S3Uploader implements Uploader{
             log.info("File delete success");
             return;
         }
-        log.info("File delete fail");
+        log.info("File delete failed");
     }
 
 }

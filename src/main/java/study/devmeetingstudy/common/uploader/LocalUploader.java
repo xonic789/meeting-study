@@ -1,6 +1,7 @@
 package study.devmeetingstudy.common.uploader;
 
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import study.devmeetingstudy.domain.enums.DomainType;
@@ -12,6 +13,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
+@Slf4j
 public class LocalUploader implements Uploader{
 
   @Override
@@ -27,11 +29,12 @@ public class LocalUploader implements Uploader{
   public Map<String, String> upload(MultipartFile multipartFile, DomainType domainType) throws IOException {
     File uploadFile = convert(multipartFile)
             .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File convert error"));
-    return getFileInfo(uploadFile.getName(), uploadFile.getAbsolutePath());
+    return getFileInfo(uploadFile);
   }
 
   private Optional<File> convert(MultipartFile multipartFile) throws IOException {
-    File convertFile = new File(System.getProperty("user.dir") + "/" + UUID.randomUUID() + multipartFile.getOriginalFilename());
+    File convertFile = new File(UPLOAD_PATH + UUID.randomUUID() + multipartFile.getOriginalFilename());
+    log.info("convert File Path = {}", convertFile.getAbsolutePath());
     if (convertFile.createNewFile()){
       try (FileOutputStream fos = new FileOutputStream(convertFile)) {
         fos.write(multipartFile.getBytes());
@@ -42,10 +45,19 @@ public class LocalUploader implements Uploader{
   }
 
 
-  public Map<String, String> getFileInfo(String originalFileName, String uploadImageUrl) {
+  private Map<String, String> getFileInfo(File file) {
     Map<String, String> fileInfo = new ConcurrentHashMap<>();
-    fileInfo.put(FILE_NAME, originalFileName);
-    fileInfo.put(UPLOAD_URL, uploadImageUrl);
+    fileInfo.put(FILE_NAME, file.getName());
+    fileInfo.put(UPLOAD_URL, LOCAL_IMAGE_URL + file.getName());
     return fileInfo;
   }
+
+  public void removeFile(File file) {
+    if (file.delete()) {
+      log.info("File delete success");
+      return;
+    }
+    log.info("File delete failed");
+  }
+
 }

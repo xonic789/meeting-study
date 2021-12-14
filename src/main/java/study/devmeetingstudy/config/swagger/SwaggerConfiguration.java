@@ -2,6 +2,9 @@ package study.devmeetingstudy.config.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -18,7 +21,7 @@ import java.util.*;
 // jwt 해더 인증 추가  : https://www.baeldung.com/spring-boot-swagger-jwt
 @Configuration
 @EnableSwagger2
-public class SwaggerConfiguration {
+public class SwaggerConfiguration implements WebMvcConfigurer {
 
     @Bean
     public Docket swaggerAPI() {
@@ -32,7 +35,7 @@ public class SwaggerConfiguration {
                 .select()
 //                .apis(RequestHandlerSelectors.any())  // 모든 Controller 들이 있는 패키지를 탐색해서 API 문서를 만든다
                 .apis(RequestHandlerSelectors.basePackage("study.devmeetingstudy.controller"))  // 모든 Controller 들이 있는 패키지를 탐색해서 API 문서를 만든다
-                .paths(PathSelectors.ant("/**"))
+                .paths(PathSelectors.any())
                 .build();
 //                .useDefaultResponseMessages(true); // 기본으로 세팅되는 200, 401, 403, 404 메시지 표시
     }
@@ -77,6 +80,18 @@ public class SwaggerConfiguration {
                 )
                 .version("1.0")
                 .build();
+    }
+
+
+    // swagger-ui.html 갑자기 접근 안되는 오류,
+    // implements WebMvcConfigurer 후
+    // addResourceHandlers(registry) 오버라이드 하니까 됨..
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjar/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 }
 

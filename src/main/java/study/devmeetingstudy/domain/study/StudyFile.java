@@ -23,10 +23,10 @@ public class StudyFile {
     @JoinColumn(name = "study_id")
     private Study study;
 
-    @Column(length = 30, name = "study_file_name")
+    @Column(length = 100, name = "study_file_name")
     private String name;
 
-    @Column(name = "file_path")
+    @Column(length = 300,name = "file_path")
     private String path;
 
     @Builder

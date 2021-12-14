@@ -2,8 +2,6 @@ package study.devmeetingstudy.service.study;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.web.util.UrlUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriUtils;
@@ -48,12 +46,10 @@ public class StudyFileServiceImpl implements StudyFileService {
 
     public Map<String, String> getDefaultFile(String subjectName) {
         String encodedSubjectName = UriUtils.encode(subjectName, "UTF-8");
-        log.info("encodedSubjectName = {}", encodedSubjectName);
-        log.info("path : {}", getClass().getResource("/static/"));
         String name = encodedSubjectName.toLowerCase();
         Map<String, String> fileInfo = new ConcurrentHashMap<>();
         fileInfo.put(Uploader.FILE_NAME, name + ".png");
-        fileInfo.put(Uploader.UPLOAD_URL, getClass().getResource("/static/") + name + ".png");
+        fileInfo.put(Uploader.UPLOAD_URL, Uploader.LOCAL_IMAGE_URL + name + ".png");
 
         return fileInfo;
     }
