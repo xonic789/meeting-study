@@ -47,6 +47,6 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public Member changeMemberInfo(MemberPatchReqDto memberPatchReqDto, MemberResolverDto memberResolverDto) {
         Member foundMember = getMemberOne(memberResolverDto.getId());
-        return foundMember.changeMember(memberPatchReqDto);
+        return foundMember.changeNickname(memberPatchReqDto);
     }
 }

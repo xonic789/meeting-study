@@ -35,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public Member signup(MemberSignupReqDto memberRequestDto) {
         signupValidation(memberRequestDto);
-        Member createMember = Member.createMember(memberRequestDto, passwordEncoder);
+        Member createMember = Member.create(memberRequestDto, passwordEncoder);
 
         return memberRepository.save(createMember);
     }
