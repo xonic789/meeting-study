@@ -53,7 +53,7 @@ public class Member extends BaseTimeEntity {
     private final List<Message> messages = new ArrayList<>();
 
 
-    public static Member createMember(MemberSignupReqDto memberRequestDto, PasswordEncoder passwordEncoder) {
+    public static Member create(MemberSignupReqDto memberRequestDto, PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .email(memberRequestDto.getEmail())
                 .nickname(memberRequestDto.getNickname())
@@ -95,7 +95,7 @@ public class Member extends BaseTimeEntity {
         this.status = status;
     }
 
-    public Member changeMember(MemberPatchReqDto memberPatchReqDto) {
+    public Member changeNickname(MemberPatchReqDto memberPatchReqDto) {
         this.nickname = memberPatchReqDto.getNickname();
         return this;
     }

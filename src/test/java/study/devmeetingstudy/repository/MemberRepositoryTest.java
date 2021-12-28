@@ -28,7 +28,7 @@ class MemberRepositoryTest {
     void existsNickname() throws Exception{
         //given
         PasswordEncoder pe = new BCryptPasswordEncoder();
-        Member createdMember = Member.createMember(new MemberSignupReqDto("dltmddn@naver.com", "asdf", "1234"), pe);
+        Member createdMember = Member.create(new MemberSignupReqDto("dltmddn@naver.com", "asdf", "1234"), pe);
         em.persist(createdMember);
         em.flush();
         em.clear();
