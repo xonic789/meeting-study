@@ -7,6 +7,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
+import java.util.Base64.*;
+import java.util.Base64;
 import java.util.Properties;
 
 @Configuration
@@ -39,10 +41,13 @@ public class EmailConfig {
 
     @Bean
     public JavaMailSender javaMailService() {
+        Decoder encoder =  Base64.getDecoder();
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
         javaMailSender.setHost("smtp.gmail.com");
-        javaMailSender.setUsername(id);
-        javaMailSender.setPassword(password);
+        javaMailSender.setUsername(new String(encoder.decode(id)));
+        javaMailSender.setPassword(new String(encoder.decode(password)));
+        System.out.println("------------------------------------------------------");
+        System.out.println(javaMailSender.getUsername() + " " + javaMailSender.getPassword());
         javaMailSender.setPort(port);
         javaMailSender.setJavaMailProperties(getMailProperties());
         javaMailSender.setDefaultEncoding("UTF-8");
@@ -61,4 +66,6 @@ public class EmailConfig {
 
         return pt;
     }
+
+
 }
