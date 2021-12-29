@@ -28,7 +28,7 @@ public class DBInitializer implements ApplicationRunner {
       Subject subject = Subject.create(new SubjectReqDto(s));
       em.persist(subject);
     }
-    MemberSignupReqDto testUser = new MemberSignupReqDto("test@naver.com", "testUser", "123456");
+    MemberSignupReqDto testUser = new MemberSignupReqDto("test@test.com", "testUser", "123456");
     Member member = Member.create(testUser, passwordEncoder);
     em.persist(member);
 
