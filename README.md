@@ -56,7 +56,7 @@
 ### Front-end
 - `Typescript`, `redux`, `React`, `css`, `scss`
 
-## 3. 프로젝트 시작(직접 실행해보셔도 됩니다.!)
+## 3. 프로젝트 시작(직접 실행해보셔도 됩니다.!) <span style="color:red;">주의: **gmail 인증 1단계 사용 필요** </span>
 - 준비물 : `python3`, `git`, `docker`, `docker-compose`, **Gmail 필요!** : 이메일 인증 보내기 위함.
 1. `/etc/hosts` 파일에 도메인 네임 추가 필요!
    - mac os, linux
