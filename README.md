@@ -56,8 +56,8 @@
 ### Front-end
 - `Typescript`, `redux`, `React`, `css`, `scss`
 
-## 3. 프로젝트 시작(직접 실행해보셔도 됩니다.!) <span style="color:red;">주의: **gmail 인증 1단계 사용 필요** </span>
-- 준비물 : `python3`, `git`, `docker`, `docker-compose`, **Gmail 필요!** : 이메일 인증 보내기 위함.
+## 3. 프로젝트 시작(직접 실행해보셔도 됩니다.!)
+- 준비물 : `python3`, `git`, `docker`, `docker-compose`, 이메일 전송 계정
 1. `/etc/hosts` 파일에 도메인 네임 추가 필요!
    - mac os, linux
      - `$ sudo -i`
@@ -74,11 +74,13 @@
 2. `$ cd ~/` : 홈 디렉토리로 이동
 3. `git clone https://github.com/xonic789/meeting-study` : 프로젝트 클론
 4. `$ cd ~/meeting-study`
-5. `$ python init.py` : 파이썬 프로그램 실행
-   - 파이썬 프로그램이 하는 일
-      1. 구글 이메일, 패스워드 입력 -> ./src/main/resources/email.properties 에 Email,Password 입력
-      2. `gradlew clean build` -> 스프링부트로 구성된 자바 어플리케이션 빌드
-      3. `docker-compose up -d` -> 백그라운드로 도커 컴포즈 실행
+5. 자격증명을 저장소 파일에 쓰지 말고 환경변수로 설정한 뒤 `$ python init.py`를 실행합니다.
+   ```bash
+   export ADMIN_MAIL_ID='your-mail-account'
+   export ADMIN_MAIL_PASSWORD='provider-issued-app-password'
+   python init.py
+   ```
+   - `gradlew clean build` 후 `docker-compose up -d`를 실행합니다.
 6. 브라우저 창을 열고 local.dev-meeting-study.site 입력해 요청하면 완료!
 7. 테스트 유저 
     - email: test@test.com

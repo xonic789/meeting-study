@@ -7,8 +7,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-import java.util.Base64.*;
-import java.util.Base64;
 import java.util.Properties;
 
 @Configuration
@@ -33,19 +31,18 @@ public class EmailConfig {
     @Value("${mail.smtp.socketFactory.fallback}")
     private boolean fallback;
 
-    @Value("${AdminMail.id}")
+    @Value("${ADMIN_MAIL_ID}")
     private String id;
 
-    @Value("${AdminMail.password}")
+    @Value("${ADMIN_MAIL_PASSWORD}")
     private String password;
 
     @Bean
     public JavaMailSender javaMailService() {
-        Decoder encoder =  Base64.getDecoder();
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
         javaMailSender.setHost("smtp.gmail.com");
-        javaMailSender.setUsername(new String(encoder.decode(id)));
-        javaMailSender.setPassword(new String(encoder.decode(password)));
+        javaMailSender.setUsername(id);
+        javaMailSender.setPassword(password);
         javaMailSender.setPort(port);
         javaMailSender.setJavaMailProperties(getMailProperties());
         javaMailSender.setDefaultEncoding("UTF-8");
