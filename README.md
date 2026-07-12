@@ -55,6 +55,7 @@
 
 ### Front-end
 - `Typescript`, `redux`, `React`, `css`, `scss`
+- 패키지 잠금 파일은 `front/yarn.lock`을 정본으로 사용합니다.
 
 ## 3. 프로젝트 시작(직접 실행해보셔도 됩니다.!)
 - 준비물 : `python3`, `git`, `docker`, `docker-compose`, 이메일 전송 계정
